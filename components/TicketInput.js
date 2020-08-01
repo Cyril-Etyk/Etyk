@@ -4,6 +4,12 @@ import { View, Text, StyleSheet, Button, TextInput } from "react-native";
 import colors from "../constants/colors";
 
 const TicketInput = (props) => {
+
+  {
+  /* Mise à jour des données récupérées pour la création d'un nouveau ticket */
+}
+
+
   const [enteredLogo, setEnteredLogo] = useState("");
   const [enteredDate, setEnteredDate] = useState("");
   const [enteredBrand, setEnteredBrand] = useState("");
@@ -21,6 +27,10 @@ const TicketInput = (props) => {
   const priceInputHandler = (enteredPrice) => {
     setEnteredPrice(enteredPrice);
   };
+
+  {
+  /* Affichage des TextInput et du bouton pour créer un nouveau ticket */
+}
 
   return (
     <View style={styles.inputContainer}>

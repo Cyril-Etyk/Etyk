@@ -1,6 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
+{
+/* Gestion de l'affichage des nouveaux tickets */
+}
+
 const TicketItem = (props) => {
   return (
     <View style={styles.listItem}>
