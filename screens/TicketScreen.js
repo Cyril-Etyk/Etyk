@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 
 import Header from "../components/Header";
@@ -6,7 +6,6 @@ import TicketCard from "../components/TicketCard";
 import colors from "../constants/colors";
 
 export default function TicketScreen({ navigation }) {
-  const [enteredTicket, setEnteredTicket] = useState("");
 
   return (
     <View style={styles.screen}>
