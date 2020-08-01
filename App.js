@@ -1,28 +1,28 @@
+import "react-native-gesture-handler";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Header from "./components/Header";
 
-import TicketCard from "./components/TicketCard";
+import TicketScreen from "./screens/TicketScreen";
+import AddTicketScreen from "./screens/AddTicketScreen";
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <TicketCard style={styles.inputContainer}>
-      <Text>Test</Text>
-      <Text>Test</Text>
-      <Text>Test</Text>
-      <Text>Test</Text>
-      <Text>Test</Text>
-    </TicketCard>
+    <NavigationContainer style={styles.screen}>
+      <Stack.Navigator>
+        <Stack.Screen name="Mes tickets" component={TicketScreen} />
+        <Stack.Screen name="Ajouter un ticket" component={AddTicketScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    width: "95%",
-    maxWidth: "95%",
-    marginHorizontal: "2.5%",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: "25%",
+  screen: {
+    flex: 1,
   },
 });
