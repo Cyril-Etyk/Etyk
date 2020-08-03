@@ -1,15 +1,23 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+
 
 {
-/* Gestion de l'affichage des nouveaux tickets */
+  /* Gestion de l'affichage des nouveaux tickets */
 }
 
 const TicketItem = (props) => {
   return (
-    <View style={styles.listItem}>
-      <Text>{props.title}</Text>
-    </View>
+    <TouchableOpacity
+      onPress={props.onDelete.bind(this, props.id)}
+      style={{ ...styles.listItem, ...props.style }}
+    >
+      <View style={styles.textItem}>
+      <Image style={styles.logo} source={props.logo} />
+
+        <Text>{props.title}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -23,9 +31,21 @@ const styles = StyleSheet.create({
     elevation: 5,
     padding: 15,
     borderRadius: 10,
-    width: "95%",
     alignItems: "center",
+    justifyContent: 'space-around',
+    marginVertical: 5,
+    flexDirection: 'row'
   },
+  logo:{
+    width: 45,
+    height: 18,
+    marginHorizontal: 20
+  },
+  textItem:{
+    justifyContent:'space-between',
+    alignItems: 'center',
+    flexDirection:'row'
+  }
 });
 
 export default TicketItem;
