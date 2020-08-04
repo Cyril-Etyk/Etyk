@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 
-
 {
   /* Gestion de l'affichage des nouveaux tickets */
 }
@@ -13,7 +12,7 @@ const TicketItem = (props) => {
       style={{ ...styles.listItem, ...props.style }}
     >
       <View style={styles.textItem}>
-      <Image style={styles.logo} source={props.logo} />
+        <Image style={styles.logo} source={props.logo} />
 
         <Text>{props.title}</Text>
       </View>
@@ -32,20 +31,21 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
-    justifyContent: 'space-around',
+    justifyContent: "space-around",
     marginVertical: 5,
-    flexDirection: 'row'
+    flexDirection: "row",
+    maxWidth: "100%",
   },
-  logo:{
+  logo: {
     width: 45,
     height: 18,
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
-  textItem:{
-    justifyContent:'space-between',
-    alignItems: 'center',
-    flexDirection:'row'
-  }
+  textItem: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+  },
 });
 
 export default TicketItem;

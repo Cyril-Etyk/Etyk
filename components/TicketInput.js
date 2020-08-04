@@ -24,14 +24,14 @@ const TicketInput = (props) => {
     setEnteredBrand(inputBrand.replace(/[^a-zA-Z& ]/g, ""));
   };
   const priceInputHandler = (inputPrice) => {
-    setEnteredPrice(inputPrice.replace(/[^0-9€]/g, ""));
+    setEnteredPrice(inputPrice.replace(/[^0-9,€]/g, ""));
   };
 
   const addTicketHandler = () => {
-    if (enteredBrand.length <=0 || enteredPrice.length <=0){
+    if (enteredBrand.length <= 0 || enteredPrice.length <= 0) {
       return;
     }
-    props.onAddTicket( enteredBrand, enteredPrice);
+    props.onAddTicket(enteredBrand, enteredPrice);
     setEnteredBrand("");
     setEnteredPrice("");
   };
@@ -52,7 +52,7 @@ const TicketInput = (props) => {
             placeholder="Marque"
             style={styles.input}
             autoCorrect={false}
-            maxLength={9}
+            maxLength={10}
             onChangeText={brandInputHandler}
             value={enteredBrand}
           />
@@ -60,10 +60,10 @@ const TicketInput = (props) => {
             placeholder="Prix"
             style={styles.input}
             autoCorrect={false}
-            maxLength={9}
+            maxLength={8}
             onChangeText={priceInputHandler}
             value={enteredPrice}
-            keyboardType='number-pad'
+            keyboardType="number-pad"
           />
 
           <View style={styles.buttonContainer}>
