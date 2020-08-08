@@ -1,25 +1,61 @@
-import "react-native-gesture-handler";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+//Import React
+import React from 'react';
 
-import TicketScreen from "./screens/TicketScreen";
+//Import Navigators from React Navigation
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
-const Stack = createStackNavigator();
+//Import all the screens needed
+import SplashScreen from './Screen/SplashScreen';
+import LoginScreen from './Screen/LoginScreen';
+import RegisterScreen from './Screen/RegisterScreen';
+import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 
-export default function App() {
-  return (
-    <NavigationContainer style={styles.screen}>
-      <Stack.Navigator>
-        <Stack.Screen name="Mes tickets" component={TicketScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
+import colors from './constants/colors'
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
+const Auth = createStackNavigator({
+  //Stack Navigator for Login and Sign up Screen
+  LoginScreen: {
+    screen: LoginScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  RegisterScreen: {
+    screen: RegisterScreen,
+    navigationOptions: {
+      title: 'Register',
+      headerStyle: {
+        backgroundColor: colors.primary,
+      },
+      headerTintColor: '#fff',
+    },
   },
 });
+
+/* Switch Navigator for those screens which needs to be switched only once
+  and we don't want to switch back once we switch from them to the next one */
+const App = createSwitchNavigator({
+  SplashScreen: {
+    /* SplashScreen which will come once for 5 Seconds */
+    screen: SplashScreen,
+    navigationOptions: {
+      /* Hiding header for Splash Screen */
+      headerShown: false,
+    },
+  },
+  Auth: {
+    /* Auth Navigator which includer Login Signup will come once */
+    screen: Auth,
+  },
+  DrawerNavigationRoutes: {
+    /* Navigation Drawer as a landing page */
+    screen: DrawerNavigationRoutes,
+    navigationOptions: {
+      /* Hiding header for Navigation Drawer as we will use our custom header */
+      headerShown: false,
+    },
+  },
+});
+
+export default createAppContainer(App);

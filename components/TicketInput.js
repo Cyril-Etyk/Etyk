@@ -19,12 +19,22 @@ const TicketInput = (props) => {
 
   const [enteredBrand, setEnteredBrand] = useState("");
   const [enteredPrice, setEnteredPrice] = useState("");
+  const [enteredTva, setEnteredTva] = useState("");
+  const [showInput, setShowInput] = useState(styles.hiddenInput);
+  const [toggleInput, setToggleInput] = useState(' + ');
 
   const brandInputHandler = (inputBrand) => {
     setEnteredBrand(inputBrand.replace(/[^a-zA-Z& ]/g, ""));
   };
   const priceInputHandler = (inputPrice) => {
+<<<<<<< Updated upstream
     setEnteredPrice(inputPrice.replace(/[^0-9€]/g, ""));
+=======
+    setEnteredPrice(inputPrice.replace(/[^0-9,]/g, ""));
+  };
+  const tvaInputHandler = (inputTva) => {
+    setEnteredTva(inputTva.replace(/[^0-9,]/g, ""));
+>>>>>>> Stashed changes
   };
 
   const addTicketHandler = () => {
@@ -34,6 +44,17 @@ const TicketInput = (props) => {
     props.onAddTicket( enteredBrand, enteredPrice);
     setEnteredBrand("");
     setEnteredPrice("");
+  };
+
+  const showMoreInputHandler = () => {
+    if(toggleInput === ' + '){
+      setShowInput(styles.input);
+      setToggleInput(' - ');
+    } else{
+      setShowInput(styles.hiddenInput);
+      setToggleInput(' + ');
+    }
+
   };
 
   {
@@ -50,7 +71,7 @@ const TicketInput = (props) => {
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Marque"
-            style={styles.input}
+            style={styles.input} 
             autoCorrect={false}
             maxLength={9}
             onChangeText={brandInputHandler}
@@ -65,6 +86,21 @@ const TicketInput = (props) => {
             value={enteredPrice}
             keyboardType='number-pad'
           />
+          <TextInput
+            placeholder="TVA"
+            style={showInput}
+            autoCorrect={false}
+            maxLength={5}
+            value={enteredTva}
+            onChangeText={tvaInputHandler}
+          />
+          <Button
+            title={toggleInput}
+            color={colors.primary}
+            style={styles.moreButton}
+            onPress={showMoreInputHandler}
+          />
+
 
           <View style={styles.buttonContainer}>
             <Button
@@ -73,7 +109,7 @@ const TicketInput = (props) => {
               onPress={props.onCancel}
             />
             <Button
-              title="Ajouter un ticket"
+              title="Ajouter"
               color={colors.accent}
               onPress={addTicketHandler}
             />
@@ -99,12 +135,28 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 5,
   },
+  hiddenInput:{
+    borderColor: "black",
+    borderWidth: 1,
+    padding: 10,
+    backgroundColor: "white",
+    width: "70%",
+    margin: 10,
+    borderRadius: 5,
+    opacity:0,
+    height:0,
+    width:0
+  },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: "60%",
-    marginVertical: 20,
+    justifyContent: "space-around",
+    width: "45%",
+    marginVertical: 30,
   },
+  moreButton:{
+    borderRadius: 100,
+
+  }
 });
 
 export default TicketInput;
