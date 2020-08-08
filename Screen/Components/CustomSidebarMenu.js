@@ -10,15 +10,15 @@ import colors from '../../constants/colors.js';
 const CustomSidebarMenu = props => {
   let items = [
     {
-      navOptionName: 'Ticket Screen',
+      navOptionName: 'Mes Tickets',
       screenToNavigate: 'TicketScreen',
     },
     {
-      navOptionName: 'Setting Screen',
+      navOptionName: 'Options',
       screenToNavigate: 'SettingsScreen',
     },
     {
-      navOptionName: 'Logout',
+      navOptionName: 'Se déconnecter',
       screenToNavigate: 'logout',
     },
   ];
@@ -74,7 +74,7 @@ const CustomSidebarMenu = props => {
               color: 'white',
               backgroundColor:
                 global.currentScreenIndex === item.screenToNavigate
-                  ? '#4b9ff2'
+                  ? colors.focus
                   : colors.primary,
             }}
             key={key}

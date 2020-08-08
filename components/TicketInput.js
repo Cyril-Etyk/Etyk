@@ -27,14 +27,10 @@ const TicketInput = (props) => {
     setEnteredBrand(inputBrand.replace(/[^a-zA-Z& ]/g, ""));
   };
   const priceInputHandler = (inputPrice) => {
-<<<<<<< Updated upstream
-    setEnteredPrice(inputPrice.replace(/[^0-9€]/g, ""));
-=======
     setEnteredPrice(inputPrice.replace(/[^0-9,]/g, ""));
   };
   const tvaInputHandler = (inputTva) => {
     setEnteredTva(inputTva.replace(/[^0-9,]/g, ""));
->>>>>>> Stashed changes
   };
 
   const addTicketHandler = () => {
@@ -44,6 +40,7 @@ const TicketInput = (props) => {
     props.onAddTicket( enteredBrand, enteredPrice);
     setEnteredBrand("");
     setEnteredPrice("");
+    setEnteredTva("");
   };
 
   const showMoreInputHandler = () => {
@@ -71,7 +68,7 @@ const TicketInput = (props) => {
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Marque"
-            style={styles.input} 
+            style={styles.input}
             autoCorrect={false}
             maxLength={9}
             onChangeText={brandInputHandler}
@@ -93,6 +90,7 @@ const TicketInput = (props) => {
             maxLength={5}
             value={enteredTva}
             onChangeText={tvaInputHandler}
+            keyboardType='number-pad'
           />
           <Button
             title={toggleInput}

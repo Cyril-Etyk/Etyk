@@ -7,11 +7,11 @@ import { View, Text } from 'react-native';
 const SettingsScreen = () => {
   return (
     <View style={{ flex: 1, alignItems: 'center', marginTop: 100 }}>
-      <Text style={{ fontSize: 23, marginTop: 10 }}>Setting Screen</Text>
+      <Text style={{ fontSize: 23, marginTop: 10 }}>Mes options</Text>
       <Text style={{ fontSize: 18, marginTop: 10 }}>
-        Simple Login Registraction Example
+        Lorem ipsum
       </Text>
-      <Text style={{ fontSize: 18, marginTop: 10 }}>https://aboutreact</Text>
+      <Text style={{ fontSize: 18, marginTop: 10 }}>Etyk, c'est CHIC</Text>
     </View>
   );
 };

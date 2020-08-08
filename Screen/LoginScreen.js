@@ -27,11 +27,11 @@ const LoginScreen = props => {
   const handleSubmitPress = () => {
     setErrortext('');
     if (!userEmail) {
-      alert('Please fill Email');
+      alert('Veuillez compléter l\'adresse Email');
       return;
     }
     if (!userPassword) {
-      alert('Please fill Password');
+      alert('Veuillez compléter le mot de passe');
       return;
     }
     setLoading(true);
@@ -62,8 +62,8 @@ const LoginScreen = props => {
           console.log(responseJson.data[0].user_id);
           props.navigation.navigate('DrawerNavigationRoutes');
         } else {
-          setErrortext('Please check your email id or password');
-          console.log('Please check your email id or password');
+          setErrortext('Email ou mot de passe incorrect');
+          console.log('Email ou mot de passe incorrect');
         }
       })
       .catch(error => {
@@ -95,7 +95,7 @@ const LoginScreen = props => {
                 style={styles.inputStyle}
                 onChangeText={UserEmail => setUserEmail(UserEmail)}
                 underlineColorAndroid="#FFFFFF"
-                placeholder="Enter Email" //dummy@abc.com
+                placeholder="Enter Email" //exemple@abc.com
                 placeholderTextColor="#F6F6F7"
                 autoCapitalize="none"
                 keyboardType="email-address"
@@ -114,7 +114,7 @@ const LoginScreen = props => {
                 style={styles.inputStyle}
                 onChangeText={UserPassword => setUserPassword(UserPassword)}
                 underlineColorAndroid="#FFFFFF"
-                placeholder="Enter Password" //12345
+                placeholder="Mot de passe" //12345
                 placeholderTextColor="#F6F6F7"
                 keyboardType="default"
                 ref={ref => {
