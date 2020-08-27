@@ -29,35 +29,33 @@ export default function TicketScreen({ navigation }) {
     /* Fonction permettant l'ajout d'un ticket à la liste des tickets */
   }
 
-  const addTicketHandler = (brand, price) => {
+  const addTicketHandler = (brand, price, date) => {
     {
       /* Gestion du Logo et de la date du nouveau ticket */
     }
     let chosenLogo;
-    const dateStart = new Date();
-    const dateYear = dateStart.getFullYear();
-    const dateMonth = dateStart.getMonth() + 1;
-    const dateDay = dateStart.getDate();
-    const dateHour = dateStart.getHours();
-    const dateMinute = dateStart.getMinutes();
-    const date =
-      dateDay +
-      "/" +
-      dateMonth +
-      "/" +
-      dateYear +
-      " - " +
-      dateHour +
-      ":" +
-      dateMinute;
+    const dateYear = date.getFullYear();
+    const dateMonth = date.getMonth() + 1;
+    const dateDay = date.getDate();
+    const dateHour = date.getHours();
+    const dateMinute = date.getMinutes();
+    console.log(dateHour);
+    const dateFinal = dateDay + "/" + dateMonth + "/" + dateYear;
+    const heureFinal = dateHour + ":" + dateMinute;
 
     if (brand.length <= 0 || price.length <= 0) {
       return;
     }
     if (brand.toLowerCase() === "etyk") {
-      chosenLogo = require("../../logos/Etyk.jpg");
+      chosenLogo = require("../../Image/etyk.png");
     } else if (brand.toLowerCase() === "h&m") {
       chosenLogo = require("../../logos/HandM.jpg");
+    } else if (brand.toLowerCase() === "zara") {
+      chosenLogo = require("../../logos/zara.jpg");
+    } else if (brand.toLowerCase() === "colruyt") {
+      chosenLogo = require("../../logos/colruyt.jpg");
+    } else if (brand.toLowerCase() === "timberland") {
+      chosenLogo = require("../../logos/timberland.jpg");
     } else {
       chosenLogo = require("../../logos/NoLogo.png");
     }
@@ -71,8 +69,9 @@ export default function TicketScreen({ navigation }) {
       {
         id: Math.random().toString(),
         logo: chosenLogo,
-        date: date,
-        brand: brand,
+        date: dateFinal,
+        hour: heureFinal,
+        brand: brand.toUpperCase(),
         price: price,
       },
     ]);
@@ -93,8 +92,8 @@ export default function TicketScreen({ navigation }) {
     let sortedTicket = [...newTicket];
     if (isDescending) {
       sortedTicket.sort(function (a, b) {
-        var dateA = a.date,
-          dateB = b.date;
+        var dateA = parseInt(a.date) + parseInt(a.hour),
+          dateB = parseInt(b.date) + parseInt(b.hour);
         if (dateA < dateB)
           //sort string ascending
           return 1;
@@ -105,8 +104,8 @@ export default function TicketScreen({ navigation }) {
       setIsDescending(false);
     } else {
       sortedTicket.sort(function (a, b) {
-        var dateA = a.date,
-          dateB = b.date;
+        var dateA = parseInt(a.date) + parseInt(a.hour),
+          dateB = parseInt(b.date) + parseInt(b.hour);
         if (dateA < dateB)
           //sort string ascending
           return -1;
@@ -168,6 +167,38 @@ export default function TicketScreen({ navigation }) {
     }
   };
 
+  const goForFetch = () => {
+    //POST json
+    var dataToSend = { title: "foo", body: "bar", userId: 1 };
+    //making data to send on server
+    var formBody = [];
+    for (var key in dataToSend) {
+      var encodedKey = encodeURIComponent(key);
+      var encodedValue = encodeURIComponent(dataToSend[key]);
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+    formBody = formBody.join("&");
+    //POST request
+    fetch("http://localhost:5000/Tickets", {
+      method: "POST", //Request Type
+      body: formBody, //post body
+      headers: {
+        //Header Defination
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+        alert(JSON.stringify(responseJson));
+        console.log(responseJson);
+      })
+      //If response is not in json then in error
+      .catch((error) => {
+        alert(JSON.stringify(error));
+        console.error(error);
+      });
+  };
   return (
     <View style={styles.screen}>
       <View style={styles.button}>
@@ -177,21 +208,24 @@ export default function TicketScreen({ navigation }) {
           onPress={() => setTicketModal(true)}
         />
       </View>
+      <View style={styles.button}>
+        <Button title="Fetch" color={colors.primary} onPress={goForFetch} />
+      </View>
 
       <View style={styles.buttonContainer}>
         <Button
           title="Trier par Date"
-          color="lightgrey"
+          color="grey"
           onPress={sortByDateHandler}
         />
         <Button
           title="Trier par marque"
-          color="lightblue"
+          color="darkblue"
           onPress={sortByBrandHandler}
         />
         <Button
           title="Trier par prix"
-          color="lightgreen"
+          color="darkgreen"
           onPress={sortByPriceHandler}
         />
       </View>
@@ -217,6 +251,8 @@ export default function TicketScreen({ navigation }) {
                 "  -  " +
                 itemData.item.date +
                 "  -  " +
+                itemData.item.hour +
+                "  -  " +
                 itemData.item.price +
                 "€"
               }
@@ -239,7 +275,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    padding: 10,
+    padding: 2,
     alignItems: "center",
     justifyContent: "space-between",
     marginHorizontal: 10,

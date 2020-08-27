@@ -95,7 +95,7 @@ const LoginScreen = props => {
                 style={styles.inputStyle}
                 onChangeText={UserEmail => setUserEmail(UserEmail)}
                 underlineColorAndroid="#FFFFFF"
-                placeholder="Enter Email" //exemple@abc.com
+                placeholder="Adresse Mail / Login" //exemple@abc.com
                 placeholderTextColor="#F6F6F7"
                 autoCapitalize="none"
                 keyboardType="email-address"
@@ -132,12 +132,12 @@ const LoginScreen = props => {
               style={styles.buttonStyle}
               activeOpacity={0.5}
               onPress={handleSubmitPress}>
-              <Text style={styles.buttonTextStyle}>LOGIN</Text>
+              <Text style={styles.buttonTextStyle}>Se connecter</Text>
             </TouchableOpacity>
             <Text
               style={styles.registerTextStyle}
               onPress={() => props.navigation.navigate('RegisterScreen')}>
-              New Here ? Register
+              Nouveau client? Inscrivez-vous ici
             </Text>
           </KeyboardAvoidingView>
         </View>

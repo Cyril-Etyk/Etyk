@@ -24,7 +24,7 @@ const Auth = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
     navigationOptions: {
-      title: 'Register',
+      title: 'Inscription',
       headerStyle: {
         backgroundColor: colors.primary,
       },

@@ -29,15 +29,15 @@ const RegisterScreen = props => {
   const handleSubmitButton = () => {
     setErrortext('');
     if (!userName) {
-      alert('Please fill Name');
+      alert('Veuillez intoduire votre nom');
       return;
     }
     if (!userEmail) {
-      alert('Please fill Email');
+      alert('Veuillez introduire votre adresse mail');
       return;
     }
     if (!userAge) {
-      alert('Please fill Age');
+      alert('Veuillez introduire votre date de naissance');
       return;
     }
     if (!userAddress) {
@@ -76,9 +76,9 @@ const RegisterScreen = props => {
         // If server response message same as Data Matched
         if (responseJson.status == 1) {
           setIsRegistraionSuccess(true);
-          console.log('Registration Successful. Please Login to proceed');
+          console.log('Inscription Réussie, veuillez vous connecter');
         } else {
-          setErrortext('Registration Unsuccessful');
+          setErrortext('Inscription Échouée');
         }
       })
       .catch(error => {
@@ -99,12 +99,12 @@ const RegisterScreen = props => {
           source={require('../Image/success.png')}
           style={{ height: 150, resizeMode: 'contain', alignSelf: 'center' }}
         />
-        <Text style={styles.successTextStyle}>Registration Successful.</Text>
+        <Text style={styles.successTextStyle}>Inscription Réussie.</Text>
         <TouchableOpacity
           style={styles.buttonStyle}
           activeOpacity={0.5}
           onPress={() => props.navigation.navigate('LoginScreen')}>
-          <Text style={styles.buttonTextStyle}>Login Now</Text>
+          <Text style={styles.buttonTextStyle}>Se connecter</Text>
         </TouchableOpacity>
       </View>
     );
@@ -130,7 +130,7 @@ const RegisterScreen = props => {
               style={styles.inputStyle}
               onChangeText={UserName => setUserName(UserName)}
               underlineColorAndroid="#FFFFFF"
-              placeholder="Enter Name"
+              placeholder="Votre Nom"
               placeholderTextColor="#F6F6F7"
               autoCapitalize="sentences"
               returnKeyType="next"
@@ -145,7 +145,7 @@ const RegisterScreen = props => {
               style={styles.inputStyle}
               onChangeText={UserEmail => setUserEmail(UserEmail)}
               underlineColorAndroid="#F6F6F7"
-              placeholder="Enter Email"
+              placeholder="Votre adresse mail"
               placeholderTextColor="#F6F6F7"
               keyboardType="email-address"
               ref={ref => {
@@ -161,7 +161,7 @@ const RegisterScreen = props => {
               style={styles.inputStyle}
               onChangeText={UserAge => setUserAge(UserAge)}
               underlineColorAndroid="#F6F6F7"
-              placeholder="Enter Age"
+              placeholder="Votre date de naissance"
               placeholderTextColor="#F6F6F7"
               keyboardType="numeric"
               ref={ref => {
@@ -178,7 +178,7 @@ const RegisterScreen = props => {
               style={styles.inputStyle}
               onChangeText={UserAddress => setUserAddress(UserAddress)}
               underlineColorAndroid="#FFFFFF"
-              placeholder="Enter Address"
+              placeholder="Votre adresse"
               placeholderTextColor="#F6F6F7"
               autoCapitalize="sentences"
               ref={ref => {
@@ -196,7 +196,7 @@ const RegisterScreen = props => {
             style={styles.buttonStyle}
             activeOpacity={0.5}
             onPress={handleSubmitButton}>
-            <Text style={styles.buttonTextStyle}>REGISTER</Text>
+            <Text style={styles.buttonTextStyle}>S'INSCRIRE</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </ScrollView>

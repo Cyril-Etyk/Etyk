@@ -17,12 +17,12 @@ const FirstActivity_StackNavigator = createStackNavigator({
   First: {
     screen: TicketScreen,
     navigationOptions: ({ navigation }) => ({
-      title: 'Ticket Screen',
+      title: 'Mes Tickets',
       headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
       headerStyle: {
         backgroundColor: colors.primary,
       },
-      headerTintColor: colors.primary,
+      headerTintColor: "white",
     }),
   },
 });
@@ -31,12 +31,12 @@ const SecondActivity_StackNavigator = createStackNavigator({
   First: {
     screen: SettingsScreen,
     navigationOptions: ({ navigation }) => ({
-      title: 'Setting Screen',
+      title: 'Options',
       headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
       headerStyle: {
         backgroundColor: colors.primary,
       },
-      headerTintColor: colors.primary,
+      headerTintColor: "white",
     }),
   },
 });
