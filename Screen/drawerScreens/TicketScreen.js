@@ -168,29 +168,21 @@ export default function TicketScreen({ navigation }) {
   };
 
   const goForFetch = () => {
-    //POST json
-    var dataToSend = { title: "foo", body: "bar", userId: 1 };
-    //making data to send on server
-    var formBody = [];
-    for (var key in dataToSend) {
-      var encodedKey = encodeURIComponent(key);
-      var encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + "=" + encodedValue);
-    }
-    formBody = formBody.join("&");
-    //POST request
-    fetch("http://localhost:5000/Tickets", {
-      method: "POST", //Request Type
-      body: formBody, //post body
+    fetch('http://http:localhost:5000/api/users/registration', {
+      method: 'POST',
       headers: {
-        //Header Defination
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       },
-    })
+      body: JSON.stringify({
+        name: 'Test123',
+        email: 'abc@def.be',
+        password: '123456'
+      })
+    });
       .then((response) => response.json())
       //If response is in json then in success
       .then((responseJson) => {
-        alert(JSON.stringify(responseJson));
         console.log(responseJson);
       })
       //If response is not in json then in error

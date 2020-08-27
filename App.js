@@ -1,17 +1,17 @@
 //Import React
-import React from 'react';
+import React from "react";
 
 //Import Navigators from React Navigation
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 
 //Import all the screens needed
-import SplashScreen from './Screen/SplashScreen';
-import LoginScreen from './Screen/LoginScreen';
-import RegisterScreen from './Screen/RegisterScreen';
-import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
+import SplashScreen from "./Screen/SplashScreen";
+import LoginScreen from "./Screen/LoginScreen";
+import RegisterScreen from "./Screen/RegisterScreen";
+import DrawerNavigationRoutes from "./Screen/DrawerNavigationRoutes";
 
-import colors from './constants/colors'
+import colors from "./constants/colors";
 
 const Auth = createStackNavigator({
   //Stack Navigator for Login and Sign up Screen
@@ -24,11 +24,11 @@ const Auth = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
     navigationOptions: {
-      title: 'Inscription',
+      title: "Inscription",
       headerStyle: {
         backgroundColor: colors.primary,
       },
-      headerTintColor: '#fff',
+      headerTintColor: "#fff",
     },
   },
 });
