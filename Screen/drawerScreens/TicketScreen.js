@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,34 +6,62 @@ import {
   View,
   Button,
   FlatList,
+  ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 
 import colors from "../../constants/colors";
 import TicketItem from "../../components/TicketItem";
 import TicketInput from "../../components/TicketInput";
 
-{
-  /* Fonction principale */
-}
-
 export default function TicketScreen({ navigation }) {
   {
     /* Initialisation des States */
   }
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+
 
   const [newTicket, setNewTicket] = useState([]);
   const [ticketModal, setTicketModal] = useState(false);
   const [isDescending, setIsDescending] = useState(false);
 
-  {
-    /* Fonction permettant l'ajout d'un ticket à la liste des tickets */
-  }
+  useEffect(() => {
+    fetch("http://165.232.75.50:5000/api/tickets")
+      .then((response) => response.json())
+      .then((json) => setData(json))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, [data]);
+
+  const removeTicketHandler = (ticketId) => {
+    setNewTicket((data) => {
+      return data.filter((ticket) => ticket._id !== ticketId);
+    });
+  };
+
+  const logoHandler = (brand) => {
+    let chosenLogo;
+    if (brand.toLowerCase() === "etyk") {
+      return require("../../Image/etyk.png");
+    } else if (brand.toLowerCase() === "h&m") {
+      return require("../../logos/HandM.jpg");
+    } else if (brand.toLowerCase() === "zara") {
+      return require("../../logos/zara.jpg");
+    } else if (brand.toLowerCase() === "colruyt") {
+      return require("../../logos/colruyt.jpg");
+    } else if (brand.toLowerCase() === "timberland") {
+      return require("../../logos/timberland.jpg");
+    } else {
+      return require("../../logos/NoLogo.png");
+    }
+  };
 
   const addTicketHandler = (brand, price, date) => {
     {
       /* Gestion du Logo et de la date du nouveau ticket */
     }
-    let chosenLogo;
+
     const dateYear = date.getFullYear();
     const dateMonth = date.getMonth() + 1;
     const dateDay = date.getDate();
@@ -46,29 +74,11 @@ export default function TicketScreen({ navigation }) {
     if (brand.length <= 0 || price.length <= 0) {
       return;
     }
-    if (brand.toLowerCase() === "etyk") {
-      chosenLogo = require("../../Image/etyk.png");
-    } else if (brand.toLowerCase() === "h&m") {
-      chosenLogo = require("../../logos/HandM.jpg");
-    } else if (brand.toLowerCase() === "zara") {
-      chosenLogo = require("../../logos/zara.jpg");
-    } else if (brand.toLowerCase() === "colruyt") {
-      chosenLogo = require("../../logos/colruyt.jpg");
-    } else if (brand.toLowerCase() === "timberland") {
-      chosenLogo = require("../../logos/timberland.jpg");
-    } else {
-      chosenLogo = require("../../logos/NoLogo.png");
-    }
-
-    {
-      /* Ajout du ticket à la liste de tickets */
-    }
 
     setNewTicket((currentTickets) => [
       ...currentTickets,
       {
         id: Math.random().toString(),
-        logo: chosenLogo,
         date: dateFinal,
         hour: heureFinal,
         brand: brand.toUpperCase(),
@@ -76,12 +86,6 @@ export default function TicketScreen({ navigation }) {
       },
     ]);
     setTicketModal(false);
-  };
-
-  const removeTicketHandler = (ticketId) => {
-    setNewTicket((currentTickets) => {
-      return currentTickets.filter((ticket) => ticket.id !== ticketId);
-    });
   };
 
   const cancelTicketAdditionHandler = () => {
@@ -167,41 +171,14 @@ export default function TicketScreen({ navigation }) {
     }
   };
 
-  const goForFetch = () => {
-    fetch('http://http:localhost:5000/api/users/registration', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: 'Test123',
-        email: 'abc@def.be',
-        password: '123456'
-      })
-    });
-      .then((response) => response.json())
-      //If response is in json then in success
-      .then((responseJson) => {
-        console.log(responseJson);
-      })
-      //If response is not in json then in error
-      .catch((error) => {
-        alert(JSON.stringify(error));
-        console.error(error);
-      });
-  };
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       <View style={styles.button}>
         <Button
           title="Ajouter un ticket"
           color={colors.primary}
           onPress={() => setTicketModal(true)}
         />
-      </View>
-      <View style={styles.button}>
-        <Button title="Fetch" color={colors.primary} onPress={goForFetch} />
       </View>
 
       <View style={styles.buttonContainer}>
@@ -227,32 +204,30 @@ export default function TicketScreen({ navigation }) {
         onAddTicket={addTicketHandler}
         onCancel={cancelTicketAdditionHandler}
       />
-
-      <View style={styles.screen}>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
         <FlatList
-          renderHeader={() => {}}
-          keyExtractor={(item, index) => item.id}
-          data={newTicket}
-          renderItem={(itemData) => (
+          data={data}
+          keyExtractor={(item, index) => item._id}
+          renderItem={({ item }) => (
             <TicketItem
-              id={itemData.item.id}
+              id={item._id}
               onDelete={removeTicketHandler}
-              logo={itemData.item.logo}
+              logo={logoHandler(item.brand)}
               title={
-                itemData.item.brand +
+                item.brand.toUpperCase() +
                 "  -  " +
-                itemData.item.date +
+                item.date.substring(0, 10) +
                 "  -  " +
-                itemData.item.hour +
-                "  -  " +
-                itemData.item.price +
+                item.price +
                 "€"
               }
             />
           )}
         />
-      </View>
-    </View>
+      )}
+    </SafeAreaView>
   );
 }
 
