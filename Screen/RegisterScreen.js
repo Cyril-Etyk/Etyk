@@ -1,5 +1,5 @@
 //Import React and Hook we needed
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 //Import all required component
 import {
@@ -12,98 +12,100 @@ import {
   Keyboard,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import Loader from './Components/loader';
+} from "react-native";
+import Loader from "./Components/loader";
 
-import colors from '../constants/colors.js';
+import colors from "../constants/colors.js";
 
-const RegisterScreen = props => {
-  let [userName, setUserName] = useState('');
-  let [userEmail, setUserEmail] = useState('');
-  let [userAge, setUserAge] = useState('');
-  let [userAddress, setUserAddress] = useState('');
+const RegisterScreen = (props) => {
+  let [userName, setUserName] = useState("");
+  let [userEmail, setUserEmail] = useState("");
+  let [userPassword, setUserPassword] = useState("");
+  let [userRepeatPassword, setUserRepeatPassword] = useState("");
   let [loading, setLoading] = useState(false);
-  let [errortext, setErrortext] = useState('');
-  let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+  let [errortext, setErrortext] = useState("");
+  let [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
 
   const handleSubmitButton = () => {
-    setErrortext('');
+    setErrortext("");
     if (!userName) {
-      alert('Veuillez intoduire votre nom');
+      alert("Veuillez intoduire votre nom");
       return;
     }
     if (!userEmail) {
-      alert('Veuillez introduire votre adresse mail');
+      alert("Veuillez introduire votre adresse mail");
       return;
     }
-    if (!userAge) {
-      alert('Veuillez introduire votre date de naissance');
+    if (!userPassword) {
+      alert("Veuillez introduire un mot de passe");
       return;
     }
-    if (!userAddress) {
-      alert('Please fill Address');
+    if (!userRepeatPassword) {
+      alert("Veuillez répeter votre mot de passe");
       return;
     }
+    if (userPassword != userRepeatPassword) {
+      alert("Les mots de passe ne sont pas identiques");
+      return;
+    }
+    console.log(userName, userEmail, userPassword, userRepeatPassword);
     //Show Loader
     setLoading(true);
-    var dataToSend = {
-      user_name: userName,
-      user_email: userEmail,
-      user_age: userAge,
-      user_address: userAddress,
-    };
-    var formBody = [];
-    for (var key in dataToSend) {
-      var encodedKey = encodeURIComponent(key);
-      var encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');
 
-    fetch('https://aboutreact.herokuapp.com/register.php', {
-      method: 'POST',
-      body: formBody,
+    fetch("http://165.232.75.50:5000/api/user/register", {
+      method: "POST",
       headers: {
-        //Header Defination
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        name: userName,
+        email: userEmail,
+        password: userPassword,
+      }),
     })
-      .then(response => response.json())
-      .then(responseJson => {
+      .then((response) => response.json())
+      .then((responseJson) => {
         //Hide Loader
         setLoading(false);
         console.log(responseJson);
         // If server response message same as Data Matched
         if (responseJson.status == 1) {
-          setIsRegistraionSuccess(true);
-          console.log('Inscription Réussie, veuillez vous connecter');
+          setIsRegistrationSuccess(true);
+          console.log("Inscription Réussie, veuillez vous connecter");
         } else {
-          setErrortext('Inscription Échouée');
+          setErrortext("Inscription Échouée");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         //Hide Loader
         setLoading(false);
         console.error(error);
       });
+    setUserName("");
+    setUserEmail("");
+    setUserPassword("");
+    setUserRepeatPassword("");
   };
-  if (isRegistraionSuccess) {
+  if (isRegistrationSuccess) {
     return (
       <View
         style={{
           flex: 1,
           backgroundColor: colors.primary,
-          justifyContent: 'center',
-        }}>
+          justifyContent: "center",
+        }}
+      >
         <Image
-          source={require('../Image/success.png')}
-          style={{ height: 150, resizeMode: 'contain', alignSelf: 'center' }}
+          source={require("../Image/success.png")}
+          style={{ height: 150, resizeMode: "contain", alignSelf: "center" }}
         />
         <Text style={styles.successTextStyle}>Inscription Réussie.</Text>
         <TouchableOpacity
           style={styles.buttonStyle}
           activeOpacity={0.5}
-          onPress={() => props.navigation.navigate('LoginScreen')}>
+          onPress={() => props.navigation.navigate("LoginScreen")}
+        >
           <Text style={styles.buttonTextStyle}>Se connecter</Text>
         </TouchableOpacity>
       </View>
@@ -113,13 +115,13 @@ const RegisterScreen = props => {
     <View style={{ flex: 1, backgroundColor: colors.primary }}>
       <Loader loading={loading} />
       <ScrollView keyboardShouldPersistTaps="handled">
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: "center" }}>
           <Image
-            source={require('../Image/etyk.jpg')}
+            source={require("../Image/etyk.jpg")}
             style={{
-              width: '50%',
+              width: "50%",
               height: 100,
-              resizeMode: 'contain',
+              resizeMode: "contain",
               margin: 30,
             }}
           />
@@ -128,7 +130,7 @@ const RegisterScreen = props => {
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserName => setUserName(UserName)}
+              onChangeText={(UserName) => setUserName(UserName)}
               underlineColorAndroid="#FFFFFF"
               placeholder="Votre Nom"
               placeholderTextColor="#F6F6F7"
@@ -143,32 +145,17 @@ const RegisterScreen = props => {
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserEmail => setUserEmail(UserEmail)}
+              onChangeText={(UserEmail) => setUserEmail(UserEmail)}
               underlineColorAndroid="#F6F6F7"
               placeholder="Votre adresse mail"
               placeholderTextColor="#F6F6F7"
               keyboardType="email-address"
-              ref={ref => {
+              ref={(ref) => {
                 this._emailinput = ref;
               }}
               returnKeyType="next"
-              onSubmitEditing={() => this._ageinput && this._ageinput.focus()}
-              blurOnSubmit={false}
-            />
-          </View>
-          <View style={styles.SectionStyle}>
-            <TextInput
-              style={styles.inputStyle}
-              onChangeText={UserAge => setUserAge(UserAge)}
-              underlineColorAndroid="#F6F6F7"
-              placeholder="Votre date de naissance"
-              placeholderTextColor="#F6F6F7"
-              keyboardType="numeric"
-              ref={ref => {
-                this._ageinput = ref;
-              }}
               onSubmitEditing={() =>
-                this._addressinput && this._addressinput.focus()
+                this._passwordinput && this._passwordinput.focus()
               }
               blurOnSubmit={false}
             />
@@ -176,26 +163,44 @@ const RegisterScreen = props => {
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserAddress => setUserAddress(UserAddress)}
-              underlineColorAndroid="#FFFFFF"
-              placeholder="Votre adresse"
+              onChangeText={(UserPassword) => setUserPassword(UserPassword)}
+              underlineColorAndroid="#F6F6F7"
+              placeholder="Mot de passe"
               placeholderTextColor="#F6F6F7"
-              autoCapitalize="sentences"
-              ref={ref => {
-                this._addressinput = ref;
+              ref={(ref) => {
+                this._passwordinput = ref;
+              }}
+              onSubmitEditing={() =>
+                this._repeatpassword && this._repeatpassword.focus()
+              }
+              blurOnSubmit={false}
+            />
+          </View>
+          <View style={styles.SectionStyle}>
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={(UserRepeatPassword) =>
+                setUserRepeatPassword(UserRepeatPassword)
+              }
+              underlineColorAndroid="#FFFFFF"
+              placeholder="Veuillez répeter le mot de passe"
+              placeholderTextColor="#F6F6F7"
+              ref={(ref) => {
+                this._repeatpassword = ref;
               }}
               returnKeyType="next"
               onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit={false}
             />
           </View>
-          {errortext != '' ? (
+          {errortext != "" ? (
             <Text style={styles.errorTextStyle}> {errortext} </Text>
           ) : null}
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
-            onPress={handleSubmitButton}>
+            onPress={handleSubmitButton}
+          >
             <Text style={styles.buttonTextStyle}>S'INSCRIRE</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -207,7 +212,7 @@ export default RegisterScreen;
 
 const styles = StyleSheet.create({
   SectionStyle: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 40,
     marginTop: 20,
     marginLeft: 35,
@@ -220,7 +225,7 @@ const styles = StyleSheet.create({
     color: colors.accent,
     borderColor: colors.accent,
     height: 40,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
@@ -228,31 +233,31 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonTextStyle: {
-    color: 'white',
+    color: "white",
     paddingVertical: 10,
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
   inputStyle: {
     flex: 1,
-    color: 'white',
+    color: "white",
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
     borderRadius: 30,
-    borderColor: 'white',
+    borderColor: "white",
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
   errorTextStyle: {
-    color: 'red',
-    textAlign: 'center',
+    color: "black",
+    textAlign: "center",
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
   successTextStyle: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     fontSize: 18,
     padding: 30,
   },

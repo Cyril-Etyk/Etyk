@@ -15,12 +15,15 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
+import { userIdKey, userTokenKey} from '../constants/keys.js';
 
 import colors from '../constants/colors.js';
 
 const LoginScreen = props => {
   let [userEmail, setUserEmail] = useState('');
   let [userPassword, setUserPassword] = useState('');
+  let [userToken, setUserToken] = useState('');
+  let [userIdentificator, setUserIdentificator] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
 
@@ -35,22 +38,16 @@ const LoginScreen = props => {
       return;
     }
     setLoading(true);
-    var dataToSend = { user_email: userEmail, user_password: userPassword };
-    var formBody = [];
-    for (var key in dataToSend) {
-      var encodedKey = encodeURIComponent(key);
-      var encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');
-
-    fetch('https://aboutreact.herokuapp.com/login.php', {
-      method: 'POST',
-      body: formBody,
+    fetch('http://165.232.75.50:5000/api/user/login', {
+      method: "POST",
       headers: {
-        //Header Defination
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        email: userEmail,
+        password: userPassword,
+      }),
     }).then(response => response.json())
       .then(responseJson => {
         //Hide Loader
@@ -58,8 +55,9 @@ const LoginScreen = props => {
         console.log(responseJson);
         // If server response message same as Data Matched
         if (responseJson.status == 1) {
-          AsyncStorage.setItem('user_id', responseJson.data[0].user_id);
-          console.log(responseJson.data[0].user_id);
+          AsyncStorage.setItem(userIdKey, responseJson.user);
+          AsyncStorage.setItem(userTokenKey, responseJson.token);
+          console.log(responseJson);
           props.navigation.navigate('DrawerNavigationRoutes');
         } else {
           setErrortext('Email ou mot de passe incorrect');

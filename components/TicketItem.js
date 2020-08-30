@@ -16,6 +16,7 @@ const TicketItem = (props) => {
       <Image style={styles.logo} source={props.logo} />
 
         <Text>{props.title}</Text>
+        <Image style={styles.logo} source={props.manuel} />
       </View>
     </TouchableOpacity>
   );
@@ -42,8 +43,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20
   },
   textItem:{
-    justifyContent:'space-between',
-    alignItems: 'center',
+    justifyContent:'space-evenly',
+
     flexDirection:'row'
   }
 });

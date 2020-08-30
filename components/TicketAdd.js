@@ -10,40 +10,38 @@ import {
   Keyboard,
 } from "react-native";
 import colors from "../constants/colors";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-const TicketInput = (props) => {
+const TicketAdd = (props) => {
   {
     /* Mise à jour des données récupérées pour la création d'un nouveau ticket */
   }
-  const [date, setDate] = useState(new Date(1598051730000));
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
 
-    const onChange = (event, selectedDate) => {
-      const currentDate = selectedDate || date;
-      setShow(Platform.OS === 'ios');
-      setDate(currentDate);
-    };
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+  };
 
-    const showMode = (currentMode) => {
-      setShow(true);
-      setMode(currentMode);
-    };
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
 
-    const showDatepicker = () => {
-      showMode('date');
-    };
+  const showDatepicker = () => {
+    showMode("date");
+  };
 
-    const showTimepicker = () => {
-      showMode('time');
-    };
+  const showTimepicker = () => {
+    showMode("time");
+  };
   const [enteredBrand, setEnteredBrand] = useState("");
   const [enteredDate, setEnteredDate] = useState(new Date());
   const [enteredPrice, setEnteredPrice] = useState("");
-  const [enteredTva, setEnteredTva] = useState("");
-  const [showInput, setShowInput] = useState(styles.hiddenInput);
-  const [toggleInput, setToggleInput] = useState("Plus d'\options");
+  const [enteredNote, setEnteredNote] = useState("");
 
   const brandInputHandler = (inputBrand) => {
     setEnteredBrand(inputBrand.replace(/[^a-zA-Z& ]/g, ""));
@@ -51,37 +49,23 @@ const TicketInput = (props) => {
   const priceInputHandler = (inputPrice) => {
     setEnteredPrice(inputPrice.replace(/[^0-9,]/g, ""));
   };
-  const tvaInputHandler = (inputTva) => {
-    setEnteredTva(inputTva.replace(/[^0-9,]/g, ""));
+  const noteInputHandler = (inputNote) => {
+    setEnteredNote(inputNote.replace(/[<>]/g, ""));
   };
   const dateInputHandler = (inputDate) => {
-    setEnteredTva(inputDate);
+    setEnteredDate(inputDate);
   };
 
   const addTicketHandler = () => {
     if (enteredBrand.length <= 0 || enteredPrice.length <= 0) {
       return;
     }
-    props.onAddTicket(enteredBrand, enteredPrice, date);
+    props.onAddTicket(enteredBrand, enteredPrice, enteredDate, enteredNote);
     setEnteredBrand("");
     setEnteredPrice("");
-    setEnteredTva("");
-    setDate(new Date(1598051730000));
+    setEnteredNote("");
+    setDate(new Date());
   };
-
-  const showMoreInputHandler = () => {
-    if (toggleInput === "Plus d'\options") {
-      setShowInput(styles.input);
-      setToggleInput("Moins d'\options");
-    } else {
-      setShowInput(styles.hiddenInput);
-      setToggleInput("Plus d'\options");
-    }
-  };
-
-  {
-    /* Affichage des TextInput et du bouton pour créer un nouveau ticket */
-  }
 
   return (
     <Modal visible={props.visible} animationType="slide">
@@ -92,7 +76,7 @@ const TicketInput = (props) => {
       >
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder="Enseigne"
+            placeholder="Enseigne*"
             style={styles.input}
             autoCorrect={false}
             maxLength={10}
@@ -100,7 +84,7 @@ const TicketInput = (props) => {
             value={enteredBrand}
           />
           <TextInput
-            placeholder="Prix"
+            placeholder="Prix*"
             style={styles.input}
             autoCorrect={false}
             maxLength={9}
@@ -108,25 +92,27 @@ const TicketInput = (props) => {
             value={enteredPrice}
             keyboardType="number-pad"
           />
-          <View style={styles.buttonContainer}>
-          <Button onPress={showDatepicker} title="Date" color={colors.accent}/>
-          <Button onPress={showTimepicker} title="Heure" color={colors.accent}/>
-          </View>
           <TextInput
-            placeholder="Prix TVA comprise"
-            style={showInput}
+            placeholder="Note"
+            style={styles.input}
             autoCorrect={false}
             maxLength={5}
-            value={enteredTva}
-            onChangeText={tvaInputHandler}
-            keyboardType="number-pad"
+            value={enteredNote}
+            onChangeText={noteInputHandler}
           />
-          <Button
-            title={toggleInput}
-            color={colors.white}
-            style={styles.moreButton}
-            onPress={showMoreInputHandler}
-          />
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={showDatepicker}
+              title="Date"
+              color={colors.accent}
+            />
+            <Button
+              onPress={showTimepicker}
+              title="Heure"
+              color={colors.accent}
+            />
+          </View>
+
 
           <View style={styles.buttonContainer}>
             <Button
@@ -194,4 +180,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TicketInput;
+export default TicketAdd;
