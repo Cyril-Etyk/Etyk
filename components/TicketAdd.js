@@ -113,7 +113,6 @@ const TicketAdd = (props) => {
             />
           </View>
 
-
           <View style={styles.buttonContainer}>
             <Button
               title="Annuler"

@@ -14,7 +14,7 @@ const CustomSidebarMenu = props => {
       screenToNavigate: 'TicketScreen',
     },
     {
-      navOptionName: 'Options',
+      navOptionName: 'Mon Profil',
       screenToNavigate: 'SettingsScreen',
     },
     {
@@ -40,8 +40,7 @@ const CustomSidebarMenu = props => {
             text: 'Confirm',
             onPress: () => {
               AsyncStorage.clear();
-              props.navigation.navigate('Auth');
-              console.log('logout');
+              props.navigation.navigate('LoginScreen');
             },
           },
         ],

@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import colors from "../../constants/colors";
-import TicketItem from "../../components/TicketItem";
+import Ticket from "../../components/Ticket";
 import TicketAdd from "../../components/TicketAdd";
 import { userIdKey, userTokenKey } from "../../constants/keys.js";
 
@@ -29,7 +29,8 @@ export default function TicketScreen({ navigation }) {
   useEffect(() => {
     fetch("http://165.232.75.50:5000/api/tickets")
       .then((response) => response.json())
-      .then((json) => setData(json))
+      .then((json) => setData(json.reverse()))
+      .then((json) => sortByUser())
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, [isLoading]);
@@ -38,6 +39,16 @@ export default function TicketScreen({ navigation }) {
     setData((data) => {
       return data.filter((ticket) => ticket._id !== ticketId);
     });
+  };
+
+  const sortByUser = () => {
+    try {
+      AsyncStorage.getItem(userIdKey).then((userIdKey) => {
+        setData((data) => {
+          return data.filter((item) => item.user_id == userIdKey);
+        });
+      });
+    } catch (error) {}
   };
 
   const refreshHandler = () => {
@@ -62,7 +73,7 @@ export default function TicketScreen({ navigation }) {
 
   const typeHandler = (type) => {
     if (type.toLowerCase() === "manuel") {
-      return require("../../logos/manuel.png");
+      return require("../../Image/manuel.png");
     } else {
       return;
     }
@@ -100,6 +111,7 @@ export default function TicketScreen({ navigation }) {
     } catch (error) {}
     setTicketModal(false);
     setLoading(true);
+    sortByDateHandler();
   };
 
   const cancelTicketAddHandler = () => {
@@ -110,10 +122,10 @@ export default function TicketScreen({ navigation }) {
     let sortedTicket = [...data];
     if (isDescending) {
       sortedTicket.sort(function (a, b) {
-        var dateA = parseInt(a.date),
-          dateB = parseInt(b.date);
+        var dateA = a.date,
+          dateB = b.date;
         if (dateA < dateB) return -1;
-        if (dateA > dateB) console.log(dateA, dateB);
+        if (dateA > dateB)
         return 1;
         return 0; //default return value (no sorting)
       });
@@ -121,10 +133,10 @@ export default function TicketScreen({ navigation }) {
       setIsDescending(false);
     } else {
       sortedTicket.sort(function (a, b) {
-        var dateA = parseInt(a.date),
-          dateB = parseInt(b.date);
+        var dateA = a.date,
+          dateB = b.date;
         if (dateA < dateB) return 1;
-        if (dateA > dateB) console.log(dateA, dateB);
+        if (dateA > dateB)
         return -1;
         return 0; //default return value (no sorting)
       });
@@ -227,7 +239,7 @@ export default function TicketScreen({ navigation }) {
           data={data}
           keyExtractor={(item, index) => item._id}
           renderItem={({ item }) => (
-            <TicketItem
+            <Ticket
               id={item._id}
               onDelete={removeTicketHandler}
               logo={logoHandler(item.brand)}
@@ -237,7 +249,9 @@ export default function TicketScreen({ navigation }) {
                 "  -  " +
                 item.date.substring(0, 10) +
                 "  -  " +
-                parseFloat(item.price.replace(",", ".")).toFixed(2).replace(".", ",") +
+                parseFloat(item.price.replace(",", "."))
+                  .toFixed(2)
+                  .replace(".", ",") +
                 "€"
               }
             />

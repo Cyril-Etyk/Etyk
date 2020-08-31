@@ -1,5 +1,5 @@
 //Import React and Hook we needed
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 //Import all required component
 import {
@@ -12,33 +12,33 @@ import {
   Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView,
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import Loader from './Components/loader';
-import { userIdKey, userTokenKey} from '../constants/keys.js';
+} from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
+import Loader from "./Components/loader";
+import { userIdKey, userTokenKey } from "../constants/keys.js";
 
-import colors from '../constants/colors.js';
+import colors from "../constants/colors.js";
 
-const LoginScreen = props => {
-  let [userEmail, setUserEmail] = useState('');
-  let [userPassword, setUserPassword] = useState('');
-  let [userToken, setUserToken] = useState('');
-  let [userIdentificator, setUserIdentificator] = useState('');
+const LoginScreen = (props) => {
+  let [userEmail, setUserEmail] = useState("");
+  let [userPassword, setUserPassword] = useState("");
+  let [userToken, setUserToken] = useState("");
+  let [userIdentificator, setUserIdentificator] = useState("");
   let [loading, setLoading] = useState(false);
-  let [errortext, setErrortext] = useState('');
+  let [errortext, setErrortext] = useState("");
 
   const handleSubmitPress = () => {
-    setErrortext('');
+    setErrortext("");
     if (!userEmail) {
-      alert('Veuillez compléter l\'adresse Email');
+      alert("Veuillez compléter l'adresse Email");
       return;
     }
     if (!userPassword) {
-      alert('Veuillez compléter le mot de passe');
+      alert("Veuillez compléter le mot de passe");
       return;
     }
     setLoading(true);
-    fetch('http://165.232.75.50:5000/api/user/login', {
+    fetch("http://165.232.75.50:5000/api/user/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -48,23 +48,22 @@ const LoginScreen = props => {
         email: userEmail,
         password: userPassword,
       }),
-    }).then(response => response.json())
-      .then(responseJson => {
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
         //Hide Loader
         setLoading(false);
-        console.log(responseJson);
         // If server response message same as Data Matched
         if (responseJson.status == 1) {
           AsyncStorage.setItem(userIdKey, responseJson.user);
           AsyncStorage.setItem(userTokenKey, responseJson.token);
-          console.log(responseJson);
-          props.navigation.navigate('DrawerNavigationRoutes');
+          props.navigation.navigate("DrawerNavigationRoutes");
         } else {
-          setErrortext('Email ou mot de passe incorrect');
-          console.log('Email ou mot de passe incorrect');
+          setErrortext("Email ou mot de passe incorrect");
+          console.log("Email ou mot de passe incorrect");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         //Hide Loader
         setLoading(false);
         console.error(error);
@@ -77,13 +76,13 @@ const LoginScreen = props => {
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={{ marginTop: 100 }}>
           <KeyboardAvoidingView enabled>
-            <View style={{ alignItems: 'center' }}>
+            <View style={{ alignItems: "center" }}>
               <Image
-                source={require('../Image/etyk.jpg')}
+                source={require("../Image/etyk.png")}
                 style={{
-                  width: '50%',
+                  width: "50%",
                   height: 100,
-                  resizeMode: 'contain',
+                  resizeMode: "contain",
                   margin: 30,
                 }}
               />
@@ -91,13 +90,13 @@ const LoginScreen = props => {
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={UserEmail => setUserEmail(UserEmail)}
+                onChangeText={(UserEmail) => setUserEmail(UserEmail)}
                 underlineColorAndroid="#FFFFFF"
                 placeholder="Adresse Mail / Login" //exemple@abc.com
                 placeholderTextColor="#F6F6F7"
                 autoCapitalize="none"
                 keyboardType="email-address"
-                ref={ref => {
+                ref={(ref) => {
                   this._emailinput = ref;
                 }}
                 returnKeyType="next"
@@ -110,12 +109,12 @@ const LoginScreen = props => {
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={UserPassword => setUserPassword(UserPassword)}
+                onChangeText={(UserPassword) => setUserPassword(UserPassword)}
                 underlineColorAndroid="#FFFFFF"
                 placeholder="Mot de passe" //12345
                 placeholderTextColor="#F6F6F7"
                 keyboardType="default"
-                ref={ref => {
+                ref={(ref) => {
                   this._passwordinput = ref;
                 }}
                 onSubmitEditing={Keyboard.dismiss}
@@ -123,18 +122,20 @@ const LoginScreen = props => {
                 secureTextEntry={true}
               />
             </View>
-            {errortext != '' ? (
+            {errortext != "" ? (
               <Text style={styles.errorTextStyle}> {errortext} </Text>
             ) : null}
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
-              onPress={handleSubmitPress}>
+              onPress={handleSubmitPress}
+            >
               <Text style={styles.buttonTextStyle}>Se connecter</Text>
             </TouchableOpacity>
             <Text
               style={styles.registerTextStyle}
-              onPress={() => props.navigation.navigate('RegisterScreen')}>
+              onPress={() => props.navigation.navigate("RegisterScreen")}
+            >
               Nouveau client? Inscrivez-vous ici
             </Text>
           </KeyboardAvoidingView>
@@ -148,11 +149,11 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     backgroundColor: colors.primary,
   },
   SectionStyle: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 40,
     marginTop: 20,
     marginLeft: 35,
@@ -162,10 +163,10 @@ const styles = StyleSheet.create({
   buttonStyle: {
     backgroundColor: colors.accent,
     borderWidth: 0,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     borderColor: colors.accent,
     height: 40,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
@@ -173,32 +174,32 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonTextStyle: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     paddingVertical: 10,
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
   inputStyle: {
     flex: 1,
-    color: 'white',
+    color: "white",
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 2,
     borderRadius: 30,
-    borderColor: 'white',
-    fontWeight: 'bold',
+    borderColor: "white",
+    fontWeight: "bold",
     fontSize: 15,
   },
   registerTextStyle: {
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 14,
   },
   errorTextStyle: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
 });

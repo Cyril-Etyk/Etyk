@@ -17,6 +17,7 @@ import Loader from "./Components/loader";
 
 import colors from "../constants/colors.js";
 
+
 const RegisterScreen = (props) => {
   let [userName, setUserName] = useState("");
   let [userEmail, setUserEmail] = useState("");
@@ -117,7 +118,7 @@ const RegisterScreen = (props) => {
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={{ alignItems: "center" }}>
           <Image
-            source={require("../Image/etyk.jpg")}
+            source={require("../Image/etyk.png")}
             style={{
               width: "50%",
               height: 100,
