@@ -61,7 +61,7 @@ const RegisterScreen = (props) => {
       },
       body: JSON.stringify({
         name: userName,
-        email: userEmail,
+        email: userEmail.toLowerCase(),
         password: userPassword,
       }),
     })
@@ -135,7 +135,7 @@ const RegisterScreen = (props) => {
               underlineColorAndroid="#FFFFFF"
               placeholder="Votre Nom"
               placeholderTextColor="#F6F6F7"
-              autoCapitalize="sentences"
+              autoCapitalize="words"
               returnKeyType="next"
               onSubmitEditing={() =>
                 this._emailinput && this._emailinput.focus()
@@ -175,6 +175,7 @@ const RegisterScreen = (props) => {
                 this._repeatpassword && this._repeatpassword.focus()
               }
               blurOnSubmit={false}
+              secureTextEntry={true}
             />
           </View>
           <View style={styles.SectionStyle}>
@@ -192,6 +193,7 @@ const RegisterScreen = (props) => {
               returnKeyType="next"
               onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit={false}
+              secureTextEntry={true}
             />
           </View>
           {errortext != "" ? (

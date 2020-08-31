@@ -8,7 +8,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 const Ticket = (props) => {
   return (
     <TouchableOpacity
-      onPress={props.onDelete.bind(this, props.id)}
+      onPress={props.onShow.bind(this, props.id)}
       style={{ ...styles.listItem, ...props.style }}
     >
       <View style={styles.textItem}>

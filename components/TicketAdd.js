@@ -8,6 +8,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Keyboard,
+  SafeAreaView,
 } from "react-native";
 import colors from "../constants/colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -39,7 +40,6 @@ const TicketAdd = (props) => {
     showMode("time");
   };
   const [enteredBrand, setEnteredBrand] = useState("");
-  const [enteredDate, setEnteredDate] = useState(new Date());
   const [enteredPrice, setEnteredPrice] = useState("");
   const [enteredNote, setEnteredNote] = useState("");
 
@@ -60,7 +60,15 @@ const TicketAdd = (props) => {
     if (enteredBrand.length <= 0 || enteredPrice.length <= 0) {
       return;
     }
-    props.onAddTicket(enteredBrand, enteredPrice, enteredDate, enteredNote);
+    props.onAddTicket(enteredBrand, enteredPrice, date, enteredNote);
+    setEnteredBrand("");
+    setEnteredPrice("");
+    setEnteredNote("");
+    setDate(new Date());
+  };
+
+  const cancelAddHandler = () => {
+    props.onCancel();
     setEnteredBrand("");
     setEnteredPrice("");
     setEnteredNote("");
@@ -74,7 +82,7 @@ const TicketAdd = (props) => {
           Keyboard.dismiss();
         }}
       >
-        <View style={styles.inputContainer}>
+        <SafeAreaView style={styles.screen}>
           <TextInput
             placeholder="Enseigne*"
             style={styles.input}
@@ -96,7 +104,7 @@ const TicketAdd = (props) => {
             placeholder="Note"
             style={styles.input}
             autoCorrect={false}
-            maxLength={5}
+            maxLength={50}
             value={enteredNote}
             onChangeText={noteInputHandler}
           />
@@ -117,7 +125,7 @@ const TicketAdd = (props) => {
             <Button
               title="Annuler"
               color={colors.primary}
-              onPress={props.onCancel}
+              onPress={cancelAddHandler}
             />
             <Button
               title="Ajouter"
@@ -125,7 +133,7 @@ const TicketAdd = (props) => {
               onPress={addTicketHandler}
             />
           </View>
-        </View>
+        </SafeAreaView>
       </TouchableWithoutFeedback>
       {show && (
         <DateTimePicker
@@ -142,7 +150,7 @@ const TicketAdd = (props) => {
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
+  screen: {
     justifyContent: "center",
     alignItems: "center",
     flex: 1,

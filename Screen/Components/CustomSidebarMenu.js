@@ -18,6 +18,10 @@ const CustomSidebarMenu = props => {
       screenToNavigate: 'SettingsScreen',
     },
     {
+      navOptionName: 'Carte ETYK',
+      screenToNavigate: 'CardScreen',
+    },
+    {
       navOptionName: 'Se déconnecter',
       screenToNavigate: 'logout',
     },

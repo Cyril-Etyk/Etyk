@@ -8,6 +8,7 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 //Import External Screens
 import TicketScreen from './drawerScreens/TicketScreen';
 import SettingsScreen from './drawerScreens/SettingsScreen';
+import CardScreen from './drawerScreens/CardScreen';
 import CustomSidebarMenu from './Components/CustomSidebarMenu';
 import NavigationDrawerHeader from './Components/NavigationDrawerHeader';
 
@@ -41,6 +42,20 @@ const SecondActivity_StackNavigator = createStackNavigator({
   },
 });
 
+const ThirdActivity_StackNavigator = createStackNavigator({
+  First: {
+    screen: CardScreen,
+    navigationOptions: ({ navigation }) => ({
+      title: 'Carte ETYK',
+      headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+      headerStyle: {
+        backgroundColor: colors.primary,
+      },
+      headerTintColor: "white",
+    }),
+  },
+});
+
 const DrawerNavigatorRoutes = createDrawerNavigator(
   {
     TicketScreen: {
@@ -53,6 +68,12 @@ const DrawerNavigatorRoutes = createDrawerNavigator(
       screen: SecondActivity_StackNavigator,
       navigationOptions: {
         drawerLabel: 'Setting Screen',
+      },
+    },
+    CardScreen: {
+      screen: ThirdActivity_StackNavigator,
+      navigationOptions: {
+        drawerLabel: 'Card Screen',
       },
     },
   },
