@@ -33,14 +33,13 @@ export default function TicketScreen({ navigation }) {
 
   useEffect(() => {
     try {
-      AsyncStorage.getItem(userIdKey)
-        .then((userIdKey) => {
-          fetch("http://165.232.75.50:5000/api/tickets/" + userIdKey)
-            .then((response) => response.json())
-            .then((json) => setData(json.reverse()))
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
-        });
+      AsyncStorage.getItem(userIdKey).then((userIdKey) => {
+        fetch("http://165.232.75.50:5000/api/tickets/" + userIdKey)
+          .then((response) => response.json())
+          .then((json) => setData(json.reverse()))
+          .catch((error) => console.error(error))
+          .finally(() => setLoading(false));
+      });
     } catch (e) {
       console.log(e);
     }
@@ -216,6 +215,11 @@ export default function TicketScreen({ navigation }) {
     }
   };
 
+  const etykCardHandler = () => {
+    global.currentScreenIndex = "CardScreen";
+    navigation.navigate("CardScreen");
+  };
+
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.button}>
@@ -225,20 +229,23 @@ export default function TicketScreen({ navigation }) {
           onPress={() => setTicketModal(true)}
         />
       </View>
+      <View style={styles.buttonEtyk}>
+        <Button
+          title="Carte ETYK"
+          color={colors.focus}
+          onPress={etykCardHandler}
+        />
+      </View>
 
       <View style={styles.buttonContainer}>
+        <Button title="Tri par Date" color="grey" onPress={sortByDateHandler} />
         <Button
-          title="Trier par Date"
-          color="grey"
-          onPress={sortByDateHandler}
-        />
-        <Button
-          title="Trier par marque"
+          title="Tri par enseigne"
           color="darkblue"
           onPress={sortByBrandHandler}
         />
         <Button
-          title="Trier par prix"
+          title="Tri par prix"
           color="darkgreen"
           onPress={sortByPriceHandler}
         />
@@ -303,15 +310,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    padding: 15,
-    marginBottom: 5,
+    padding: 10,
     alignItems: "center",
   },
   buttonContainer: {
     flexDirection: "row",
     padding: 2,
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     marginHorizontal: 10,
   },
   refresh: {
@@ -320,5 +326,10 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
     padding: 2,
+  },
+  buttonEtyk: {
+    padding: 5,
+    marginBottom: 5,
+    alignItems: "center",
   },
 });

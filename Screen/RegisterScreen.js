@@ -37,12 +37,12 @@ const RegisterScreen = (props) => {
       var re = /^.{8,}$/;
       return re.test(password);
     };
-    validateName = (name) => {
-      var re = /^[a-zA-Z]{1,}$/;
+    const validateName = (name) => {
+      var re = /^[a-zA-Z -éèç]{1,}$/;
       return re.test(name);
     };
-    if (!validateName(userName)) {
-      alert("Votre nom doit contenir au minimum un caractère");
+    if (!validateName(userName.replace(/\s/g, ""))) {
+      alert("Veuillez encoder au minimum une lettre");
       return;
     }
     if (!validateEmail(userEmail)) {

@@ -58,6 +58,14 @@ const TicketAdd = (props) => {
     if (enteredBrand.length <= 0 || enteredPrice.length <= 0) {
       return;
     }
+    const validatePrice = (price) => {
+      var re = /^\d+(,\d{1,10})?$/;
+      return re.test(price);
+    };
+    if (!validatePrice(enteredPrice)) {
+      alert("Le prix encodé n'est pas valide");
+      return;
+    }
     props.onAddTicket(enteredBrand, enteredPrice, date, enteredNote);
     setEnteredBrand("");
     setEnteredPrice("");
@@ -90,7 +98,7 @@ const TicketAdd = (props) => {
             value={enteredBrand}
           />
           <TextInput
-            placeholder="Prix*"
+            placeholder="Prix Hors Tva*"
             style={styles.input}
             autoCorrect={false}
             maxLength={9}
@@ -180,7 +188,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "45%",
-    marginVertical: 10,
+    marginVertical: 20,
   },
   moreButton: {
     borderRadius: 100,
