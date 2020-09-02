@@ -42,7 +42,7 @@ const RegisterScreen = (props) => {
       return re.test(name);
     };
     if (!validateName(userName)) {
-      alert("Veuillez encoder au minimum une lettre");
+      alert("Votre nom doit contenir au minimum un caractère");
       return;
     }
     if (!validateEmail(userEmail)) {

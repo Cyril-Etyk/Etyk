@@ -31,7 +31,7 @@ const TicketInfo = (props) => {
   const price =
     parseFloat(data.price.replace(",", ".")).toFixed(2).replace(".", ",") + "€";
   const date =
-    data.date.substring(0, 10) + "  -  " + data.date.substring(11, 19);
+    data.date.substring(0, 10) + "    " + data.date.substring(11, 19);
   const note = data.note;
 
   const type = data.type;
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   textContainer: {
     padding: 5,
     flexDirection: "row",
-    width: "45%",
+    width: "65%",
   },
   text: {
     padding: 3,
