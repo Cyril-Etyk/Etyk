@@ -24,7 +24,6 @@ const TicketAdd = (props) => {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === "ios");
-    console.log(date);
     setDate(currentDate);
   };
 
@@ -53,9 +52,7 @@ const TicketAdd = (props) => {
   const noteInputHandler = (inputNote) => {
     setEnteredNote(inputNote.replace(/[<>]/g, ""));
   };
-  const dateInputHandler = (inputDate) => {
-    setEnteredDate(inputDate);
-  };
+
 
   const addTicketHandler = () => {
     if (enteredBrand.length <= 0 || enteredPrice.length <= 0) {
@@ -144,6 +141,8 @@ const TicketAdd = (props) => {
           is24Hour={true}
           display="default"
           onChange={onChange}
+          timeZoneOffsetInSeconds={7200}
+          timeZoneOffsetInMinutes={120}
         />
       )}
     </Modal>

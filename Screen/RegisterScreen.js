@@ -197,7 +197,7 @@ const RegisterScreen = (props) => {
                 setUserRepeatPassword(UserRepeatPassword)
               }
               underlineColorAndroid="#FFFFFF"
-              placeholder="Veuillez répeter le mot de passe"
+              placeholder="Veuillez confirmer le mot de passe"
               placeholderTextColor="#F6F6F7"
               ref={(ref) => {
                 this._repeatpassword = ref;
@@ -276,4 +276,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     padding: 30,
   },
+
 });
