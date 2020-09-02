@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import Loader from "./Components/loader";
-import { userIdKey, userTokenKey } from "../constants/keys.js";
+import { userIdKey, userTokenKey, userName } from "../constants/keys.js";
 
 import colors from "../constants/colors.js";
 
@@ -29,8 +29,24 @@ const LoginScreen = (props) => {
 
   const handleSubmitPress = () => {
     setErrortext("");
+    validateEmail = (email) => {
+      var re = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    };
+    validatePassword = (password) => {
+      var re = /^.{8,}$/;
+      return re.test(password);
+    };
+    if (!validateEmail(userEmail)) {
+      alert("Adresse mail non valide");
+      return;
+    }
     if (!userEmail) {
       alert("Veuillez compléter l'adresse Email");
+      return;
+    }
+    if (!validatePassword(userPassword)) {
+      alert("Le mot de passe doit contenir au moins 8 charactères");
       return;
     }
     if (!userPassword) {
@@ -57,10 +73,11 @@ const LoginScreen = (props) => {
         if (responseJson.status == 1) {
           AsyncStorage.setItem(userIdKey, responseJson.user);
           AsyncStorage.setItem(userTokenKey, responseJson.token);
+          AsyncStorage.setItem(userName, responseJson.name);
           props.navigation.navigate("DrawerNavigationRoutes");
         } else {
-          setErrortext("Email ou mot de passe incorrect");
-          console.log("Email ou mot de passe incorrect");
+          setErrortext(responseJson.error);
+          console.log(responseJson.error);
         }
       })
       .catch((error) => {

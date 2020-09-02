@@ -29,20 +29,32 @@ const RegisterScreen = (props) => {
 
   const handleSubmitButton = () => {
     setErrortext("");
-    if (!userName) {
-      alert("Veuillez intoduire votre nom");
+    validateEmail = (email) => {
+      var re = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    };
+    validatePassword = (password) => {
+      var re = /^.{8,}$/;
+      return re.test(password);
+    };
+    validateName = (name) => {
+      var re = /^[a-zA-Z]{1,}$/;
+      return re.test(name);
+    };
+    if (!validateName(userName)) {
+      alert("Veuillez encoder au minimum une lettre");
       return;
     }
-    if (!userEmail) {
-      alert("Veuillez introduire votre adresse mail");
+    if (!validateEmail(userEmail)) {
+      alert("Adresse mail non valide");
       return;
     }
-    if (!userPassword) {
-      alert("Veuillez introduire un mot de passe");
+    if (!validatePassword(userPassword)) {
+      alert("Le mot de passe doit contenir au moins 8 caractères");
       return;
     }
-    if (!userRepeatPassword) {
-      alert("Veuillez répeter votre mot de passe");
+    if (!validatePassword(userRepeatPassword)) {
+      alert("Le mot de passe doit contenir au moins 8 caractères");
       return;
     }
     if (userPassword != userRepeatPassword) {

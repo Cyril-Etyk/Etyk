@@ -24,6 +24,7 @@ const TicketAdd = (props) => {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === "ios");
+    console.log(date);
     setDate(currentDate);
   };
 

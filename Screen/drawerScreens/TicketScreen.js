@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
   TouchableOpacity,
-  Image
+  Image,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -26,24 +26,28 @@ export default function TicketScreen({ navigation }) {
   }
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [singleUserData, setSingleUserData] = useState([]);
   const [singeTicketData, setSingleTicketData] = useState("");
   const [ticketModal, setTicketModal] = useState(false);
   const [ticketInfoModal, setTicketInfoModal] = useState(false);
   const [isDescending, setIsDescending] = useState(false);
 
   useEffect(() => {
-    fetch("http://165.232.75.50:5000/api/tickets")
-      .then((response) => response.json())
-      .then((json) => setData(json.reverse()))
-      .then((json) => sortByUser())
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+    try {
+      AsyncStorage.getItem(userIdKey)
+        .then((userIdKey) => {
+          fetch("http://165.232.75.50:5000/api/tickets/" + userIdKey)
+            .then((response) => response.json())
+            .then((json) => setData(json.reverse()))
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(false));
+        });
+    } catch (e) {
+      console.log(e);
+    }
   }, [isLoading]);
 
   const removeTicketHandler = (toDelete) => {
     let toFetch = "http://165.232.75.50:5000/api/tickets/" + toDelete;
-    console.log(toFetch);
     fetch(toFetch, {
       method: "DELETE",
       headers: {
@@ -70,15 +74,8 @@ export default function TicketScreen({ navigation }) {
     setTicketInfoModal(true);
   };
 
-  const sortByUser = () => {
-      AsyncStorage.getItem(userIdKey).then((userIdKey) => {
-        setSingleUserData((singleUserData) => {
-          return data.filter((item) => item.user_id == userIdKey);
-        });
-      });
-  };
-
   const refreshHandler = () => {
+    setIsDescending(false);
     setLoading(true);
   };
 
@@ -87,7 +84,7 @@ export default function TicketScreen({ navigation }) {
     if (logo === "etyk") {
       return require("../../Image/etyk.png");
     } else if (logo === "h&m") {
-      return require("../../logos/HandM.jpg");
+      return require("../../logos/hetm.jpg");
     } else if (logo === "zara") {
       return require("../../logos/zara.jpg");
     } else if (logo === "colruyt") {
@@ -95,7 +92,7 @@ export default function TicketScreen({ navigation }) {
     } else if (logo === "timberland") {
       return require("../../logos/timberland.jpg");
     } else {
-      return require("../../logos/NoLogo.png");
+      return require("../../logos/nologo.png");
     }
   };
 
@@ -138,17 +135,18 @@ export default function TicketScreen({ navigation }) {
         .done();
     } catch (error) {}
     setTicketModal(false);
-    setLoading(true);
     sortByDateHandler();
+    setLoading(true);
   };
 
   const cancelTicketAddHandler = () => {
     setTicketModal(false);
     setTicketInfoModal(false);
+    setLoading(true);
   };
 
   const sortByDateHandler = () => {
-    let sortedTicket = [...singleUserData];
+    let sortedTicket = [...data];
     if (isDescending) {
       sortedTicket.sort(function (a, b) {
         var dateA = a.date,
@@ -157,7 +155,7 @@ export default function TicketScreen({ navigation }) {
         if (dateA > dateB) return 1;
         return 0; //default return value (no sorting)
       });
-      setSingleUserData(sortedTicket);
+      setData(sortedTicket);
       setIsDescending(false);
     } else {
       sortedTicket.sort(function (a, b) {
@@ -167,13 +165,13 @@ export default function TicketScreen({ navigation }) {
         if (dateA > dateB) return -1;
         return 0; //default return value (no sorting)
       });
-      setSingleUserData(sortedTicket);
+      setData(sortedTicket);
       setIsDescending(true);
     }
   };
 
   const sortByBrandHandler = () => {
-    let sortedTicket = [...singleUserData];
+    let sortedTicket = [...data];
     if (isDescending) {
       sortedTicket.sort(function (a, b) {
         var brandA = a.brand.toLowerCase(),
@@ -182,7 +180,7 @@ export default function TicketScreen({ navigation }) {
         if (brandA > brandB) return 1;
         return 0;
       });
-      setSingleUserData(sortedTicket);
+      setData(sortedTicket);
       setIsDescending(false);
     } else {
       sortedTicket.sort(function (a, b) {
@@ -192,28 +190,28 @@ export default function TicketScreen({ navigation }) {
         if (brandA > brandB) return -1;
         return;
       });
-      setSingleUserData(sortedTicket);
+      setData(sortedTicket);
       setIsDescending(true);
     }
   };
 
   const sortByPriceHandler = () => {
-    let sortedTicket = [...singleUserData];
+    let sortedTicket = [...data];
     if (isDescending) {
       sortedTicket.sort(function (a, b) {
-        var priceA = parseInt(a.price),
-          priceB = parseInt(b.price);
+        var priceA = parseFloat(a.price.replace(",", ".")),
+          priceB = parseFloat(b.price.replace(",", "."));
         return priceA - priceB;
       });
-      setSingleUserData(sortedTicket);
+      setData(sortedTicket);
       setIsDescending(false);
     } else {
       sortedTicket.sort(function (a, b) {
-        var priceA = parseInt(a.price),
-          priceB = parseInt(b.price);
+        var priceA = parseFloat(a.price.replace(",", ".")),
+          priceB = parseFloat(b.price.replace(",", "."));
         return priceB - priceA;
       });
-      setSingleUserData(sortedTicket);
+      setData(sortedTicket);
       setIsDescending(true);
     }
   };
@@ -246,13 +244,13 @@ export default function TicketScreen({ navigation }) {
         />
       </View>
       <View style={styles.refresh}>
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        activeOpacity={0.5}
-        onPress={refreshHandler}
-      >
-        <Image source={require("../../Image/refresh.png")} />
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          activeOpacity={0.5}
+          onPress={refreshHandler}
+        >
+          <Image source={require("../../Image/refresh.png")} />
+        </TouchableOpacity>
       </View>
 
       <TicketAdd
@@ -274,7 +272,7 @@ export default function TicketScreen({ navigation }) {
         <ActivityIndicator />
       ) : (
         <FlatList
-          data={singleUserData}
+          data={data}
           keyExtractor={(item, index) => item._id}
           renderItem={({ item }) => (
             <Ticket

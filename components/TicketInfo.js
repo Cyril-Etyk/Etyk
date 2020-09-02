@@ -31,7 +31,7 @@ const TicketInfo = (props) => {
   const price =
     parseFloat(data.price.replace(",", ".")).toFixed(2).replace(".", ",") + "€";
   const date =
-    data.date.substring(11, 19) + "  -  " + data.date.substring(0, 10);
+    data.date.substring(0, 10) + "  -  " + data.date.substring(11, 19);
   const note = data.note;
 
   const type = data.type;
@@ -58,6 +58,24 @@ const TicketInfo = (props) => {
     );
   };
 
+  const logoHandler = () => {
+    let logo = brand.toLowerCase().replace(/\s/g, "");
+    if (logo === "etyk") {
+      return require("../Image/etyk.png");
+    } else if (logo === "h&m") {
+      return require("../logos/hetm.jpg");
+    } else if (logo === "zara") {
+      return require("../logos/zara.jpg");
+    } else if (logo === "colruyt") {
+      return require("../logos/colruyt.jpg");
+    } else if (logo === "timberland") {
+      return require("../logos/timberland.jpg");
+    } else {
+      return require("../logos/nologo.png");
+    }
+    console.log(logo);
+  };
+
   return (
     <Modal visible={props.visible} animationType="slide">
       <TouchableWithoutFeedback
@@ -66,6 +84,10 @@ const TicketInfo = (props) => {
         }}
       >
         <SafeAreaView style={styles.screen}>
+          <Image
+            source={logoHandler()}
+            style={{ resizeMode: "contain", margin: 30 }}
+          />
           <View style={styles.textContainer}>
             <Text style={styles.text}>Enseigne : </Text>
             <Text style={styles.textInfo}>{brand}</Text>
