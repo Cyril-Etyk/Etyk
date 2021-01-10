@@ -223,7 +223,18 @@ const SettingsScreen = ({ navigation }) => {
   //Page design
   return (
     <View style={styles.screen}>
+    <Image
+      source={require("../../Image/etyk.png")}
+      style={{
+        width: "50%",
+        height: 100,
+        resizeMode: "contain",
+        margin: 40,
+        marginTop: -50,
+      }}
+    />
       <View style={styles.changeButton}>
+
         {isLoading ? (
           <Text style={styles.firstSubText}>Nom : {name}</Text>
         ) : null}
@@ -338,7 +349,7 @@ const styles = StyleSheet.create({
   screen: { flex: 1, alignItems: "center", justifyContent: "center" },
   firstSubText: {
     fontSize: 18,
-    marginBottom: 10,
+
 
     padding: 10,
     backgroundColor: "white",

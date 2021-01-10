@@ -42,11 +42,11 @@ const RegisterScreen = (props) => {
       return re.test(name);
     };
     if (!validateName(userName.replace(/\s/g, ""))) {
-      alert("Veuillez encoder au minimum une lettre");
+      alert("Veuillez mentionner votre nom");
       return;
     }
     if (!validateEmail(userEmail)) {
-      alert("Adresse mail non valide");
+      alert("L'adresse mail n'est pas valide");
       return;
     }
     if (!validatePassword(userPassword)) {
@@ -86,6 +86,13 @@ const RegisterScreen = (props) => {
         if (responseJson.status == 1) {
           setIsRegistrationSuccess(true);
           console.log("Inscription Réussie, veuillez vous connecter");
+          setUserName("");
+          setUserEmail("");
+          setUserPassword("");
+          setUserRepeatPassword("");
+        } else if (responseJson.status == 0) {
+          setErrortext(responseJson.message);
+          return;
         } else {
           setErrortext("Inscription Échouée");
         }
@@ -95,10 +102,6 @@ const RegisterScreen = (props) => {
         setLoading(false);
         console.error(error);
       });
-    setUserName("");
-    setUserEmail("");
-    setUserPassword("");
-    setUserRepeatPassword("");
   };
   if (isRegistrationSuccess) {
     return (
@@ -265,9 +268,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   errorTextStyle: {
-    color: "black",
+    color: colors.accent,
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: "bold",
   },
   successTextStyle: {

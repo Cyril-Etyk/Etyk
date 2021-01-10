@@ -13,24 +13,25 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
-
 import colors from "../../constants/colors";
 import Ticket from "../../components/Ticket";
 import TicketAdd from "../../components/TicketAdd";
 import TicketInfo from "../../components/TicketInfo";
+import SearchPane from "../../components/SearchPane";
 import { userIdKey, userTokenKey } from "../../constants/keys.js";
 
 export default function TicketScreen({ navigation }) {
-  {
-    /* Initialisation des States */
-  }
+
+//Création des variables
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [singeTicketData, setSingleTicketData] = useState("");
   const [ticketModal, setTicketModal] = useState(false);
   const [ticketInfoModal, setTicketInfoModal] = useState(false);
   const [isDescending, setIsDescending] = useState(false);
+  const [searchModal, setSearchModal] = useState(false);
 
+//Récupération des tickets du client connecté
   useEffect(() => {
     try {
       AsyncStorage.getItem(userIdKey).then((userIdKey) => {
@@ -45,39 +46,7 @@ export default function TicketScreen({ navigation }) {
     }
   }, [isLoading]);
 
-  const removeTicketHandler = (toDelete) => {
-    let toFetch = "http://165.232.75.50:5000/api/tickets/" + toDelete;
-    fetch(toFetch, {
-      method: "DELETE",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        _id: toDelete,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {})
-      .catch((error) => {
-        console.error(error);
-      });
-    setTicketInfoModal(false);
-    setLoading(true);
-  };
-
-  const showTicketInfoModal = (ticketId) => {
-    setSingleTicketData((singeTicketData) => {
-      return data.filter((ticket) => ticket._id == ticketId);
-    });
-    setTicketInfoModal(true);
-  };
-
-  const refreshHandler = () => {
-    setIsDescending(false);
-    setLoading(true);
-  };
-
+//Préparation des données d'un ticket avant affichage dans la liste
   const logoHandler = (brand) => {
     let logo = brand.toLowerCase().replace(/\s/g, "");
     if (logo === "etyk") {
@@ -103,6 +72,40 @@ export default function TicketScreen({ navigation }) {
     }
   };
 
+//Gestion de l'affichage des MODAL
+  const showTicketInfoModal = (ticketId) => {
+    setSingleTicketData((singeTicketData) => {
+      return data.filter((ticket) => ticket._id == ticketId);
+    });
+    setTicketInfoModal(true);
+  };
+
+  const showSearchModal = (data) => {
+    setSearchModal(true);
+  };
+
+  const cancelTicketAddHandler = () => {
+    setTicketModal(false);
+    setTicketInfoModal(false);
+    setSearchModal(false);
+    setLoading(true);
+  };
+
+  const cancelSearchHandler = (ticketId) => {
+    setSingleTicketData((singeTicketData) => {
+      return data.filter((ticket) => ticket._id == ticketId);
+    });
+    setSearchModal(false);
+    setTicketInfoModal(true);
+  };
+
+//Gestion du refresh des tickets
+  const refreshHandler = () => {
+    setIsDescending(false);
+    setLoading(true);
+  };
+
+//Créer un nouveau ticket MANUEL
   const addTicketHandler = (brand, price, date, note) => {
     if (brand.length <= 0 || price.length <= 0) {
       return;
@@ -138,12 +141,35 @@ export default function TicketScreen({ navigation }) {
     setLoading(true);
   };
 
-  const cancelTicketAddHandler = () => {
-    setTicketModal(false);
+//Supprimer un ticket MANUEL
+  const removeTicketHandler = (toDelete) => {
+    let toFetch = "http://165.232.75.50:5000/api/tickets/" + toDelete;
+    fetch(toFetch, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        _id: toDelete,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {})
+      .catch((error) => {
+        console.error(error);
+      });
     setTicketInfoModal(false);
     setLoading(true);
   };
 
+//Gestion du bouton CARTE ETYK
+  const etykCardHandler = () => {
+    global.currentScreenIndex = "CardScreen";
+    navigation.navigate("CardScreen");
+  };
+
+//Gestion des fonctions de TRI
   const sortByDateHandler = () => {
     let sortedTicket = [...data];
     if (isDescending) {
@@ -215,11 +241,7 @@ export default function TicketScreen({ navigation }) {
     }
   };
 
-  const etykCardHandler = () => {
-    global.currentScreenIndex = "CardScreen";
-    navigation.navigate("CardScreen");
-  };
-
+//Affichage de l'écran
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.button}>
@@ -232,23 +254,34 @@ export default function TicketScreen({ navigation }) {
       <View style={styles.buttonEtyk}>
         <Button
           title="Carte ETYK"
-          color={colors.focus}
+          color={colors.accent}
           onPress={etykCardHandler}
         />
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button title="Tri par Date" color="grey" onPress={sortByDateHandler} />
         <Button
-          title="Tri par enseigne"
-          color="darkblue"
+          title="Trier Date"
+          color="#1cbdac"
+          onPress={sortByDateHandler}
+        />
+        <Button
+          title="Trier enseigne"
+          color="#10423d"
           onPress={sortByBrandHandler}
         />
         <Button
-          title="Tri par prix"
-          color="darkgreen"
+          title="trier prix"
+          color="#24756d"
           onPress={sortByPriceHandler}
         />
+        <TouchableOpacity
+          style={styles.search}
+          activeOpacity={0.5}
+          onPress={showSearchModal}
+        >
+          <Image source={require("../../Image/Search.png")} />
+        </TouchableOpacity>
       </View>
       <View style={styles.refresh}>
         <TouchableOpacity
@@ -275,6 +308,15 @@ export default function TicketScreen({ navigation }) {
         />
       ) : null}
 
+      {searchModal ? (
+        <SearchPane
+          visible={true}
+          data={data}
+          onCancel={cancelSearchHandler}
+          onReturn={cancelTicketAddHandler}
+        />
+      ) : null}
+
       {isLoading ? (
         <ActivityIndicator />
       ) : (
@@ -288,10 +330,8 @@ export default function TicketScreen({ navigation }) {
               logo={logoHandler(item.brand)}
               manuel={typeHandler(item.type)}
               title={
-                item.brand.toUpperCase() +
-                "  -  " +
                 item.date.substring(0, 10) +
-                "  -  " +
+                "     " +
                 parseFloat(item.price.replace(",", "."))
                   .toFixed(2)
                   .replace(".", ",") +
@@ -324,12 +364,15 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     justifyContent: "flex-start",
     marginVertical: 5,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     padding: 2,
   },
   buttonEtyk: {
     padding: 5,
     marginBottom: 5,
     alignItems: "center",
+  },
+  search: {
+
   },
 });

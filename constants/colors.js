@@ -1,6 +1,6 @@
 export default {
-    primary : '#f7287b',
-    accent: '#21054f',
-    focus: '#911647',
+    primary : '#71cc98',
+    accent: '#023d37' ,
+    focus: '#008071',
     white: 'darkgrey'
 };
