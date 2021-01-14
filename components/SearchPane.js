@@ -12,7 +12,6 @@ import {
   Alert,
   TouchableOpacity,
   Image,
-  ScrollView,
   FlatList,
 } from "react-native";
 import colors from "../constants/colors";
@@ -31,7 +30,7 @@ const SearchPane = (props) => {
       return data.filter(
         (ticket) =>
           ticket.brand.toUpperCase().includes(filterText.toUpperCase()) |
-          ticket.price.includes(filterText) |
+          ticket.totalPrice.replace(".",",").includes(filterText) |
           ticket.date.includes(filterText) |
           ticket.note.toUpperCase().includes(filterText.toUpperCase())
       );
@@ -96,9 +95,12 @@ const SearchPane = (props) => {
                 logo={logoHandler(item.brand)}
                 manuel={typeHandler(item.type)}
                 title={
-                  item.date.substring(0, 10) +
-                  "  -  " +
-                  parseFloat(item.price.replace(",", "."))
+                  item.date.substring(8, 10) +
+                  item.date.substring(4, 7) +
+                  "-" +
+                  item.date.substring(0, 4) +
+                  "     " +
+                  parseFloat(item.totalPrice.replace(",", "."))
                     .toFixed(2)
                     .replace(".", ",") +
                   "€"

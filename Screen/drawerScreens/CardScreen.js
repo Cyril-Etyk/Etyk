@@ -1,7 +1,7 @@
 //Import React
 import React, { useState, useEffect } from "react";
 
-//Import all required component
+//Import all required components
 import {
   StyleSheet,
   View,

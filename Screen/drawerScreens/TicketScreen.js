@@ -22,7 +22,7 @@ import { userIdKey, userTokenKey } from "../../constants/keys.js";
 
 export default function TicketScreen({ navigation }) {
 
-//Création des variables
+  //Initialisation des variables
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [singeTicketData, setSingleTicketData] = useState("");
@@ -31,7 +31,7 @@ export default function TicketScreen({ navigation }) {
   const [isDescending, setIsDescending] = useState(false);
   const [searchModal, setSearchModal] = useState(false);
 
-//Récupération des tickets du client connecté
+  //Récupération des tickets du client concerné
   useEffect(() => {
     try {
       AsyncStorage.getItem(userIdKey).then((userIdKey) => {
@@ -46,7 +46,7 @@ export default function TicketScreen({ navigation }) {
     }
   }, [isLoading]);
 
-//Préparation des données d'un ticket avant affichage dans la liste
+  //Préparation des données d'un ticket avant affichage sur la page
   const logoHandler = (brand) => {
     let logo = brand.toLowerCase().replace(/\s/g, "");
     if (logo === "etyk") {
@@ -72,7 +72,7 @@ export default function TicketScreen({ navigation }) {
     }
   };
 
-//Gestion de l'affichage des MODAL
+  //Gestion de l'affichage des MODAL
   const showTicketInfoModal = (ticketId) => {
     setSingleTicketData((singeTicketData) => {
       return data.filter((ticket) => ticket._id == ticketId);
@@ -99,17 +99,14 @@ export default function TicketScreen({ navigation }) {
     setTicketInfoModal(true);
   };
 
-//Gestion du refresh des tickets
+  //Gestion du refresh des tickets
   const refreshHandler = () => {
     setIsDescending(false);
     setLoading(true);
   };
 
-//Créer un nouveau ticket MANUEL
-  const addTicketHandler = (brand, price, date, note) => {
-    if (brand.length <= 0 || price.length <= 0) {
-      return;
-    }
+  //Créer un nouveau ticket MANUEL
+  const addTicketHandler = (brand, articles, totalPrice, note, date) => {
     try {
       AsyncStorage.getItem(userIdKey)
         .then((userIdKey) => {
@@ -122,7 +119,8 @@ export default function TicketScreen({ navigation }) {
             body: JSON.stringify({
               user_id: userIdKey,
               brand: brand.replace(/\s/g, ""),
-              price: price,
+              articles: articles,
+              totalPrice: totalPrice,
               date: date,
               note: note,
               type: "Manuel",
@@ -137,11 +135,10 @@ export default function TicketScreen({ navigation }) {
         .done();
     } catch (error) {}
     setTicketModal(false);
-    sortByDateHandler();
     setLoading(true);
   };
 
-//Supprimer un ticket MANUEL
+  //Supprimer un ticket MANUEL
   const removeTicketHandler = (toDelete) => {
     let toFetch = "http://165.232.75.50:5000/api/tickets/" + toDelete;
     fetch(toFetch, {
@@ -163,13 +160,13 @@ export default function TicketScreen({ navigation }) {
     setLoading(true);
   };
 
-//Gestion du bouton CARTE ETYK
+  //Gestion du bouton CARTE ETYK
   const etykCardHandler = () => {
     global.currentScreenIndex = "CardScreen";
     navigation.navigate("CardScreen");
   };
 
-//Gestion des fonctions de TRI
+  //Gestion des fonctions de tri des tickets
   const sortByDateHandler = () => {
     let sortedTicket = [...data];
     if (isDescending) {
@@ -224,16 +221,16 @@ export default function TicketScreen({ navigation }) {
     let sortedTicket = [...data];
     if (isDescending) {
       sortedTicket.sort(function (a, b) {
-        var priceA = parseFloat(a.price.replace(",", ".")),
-          priceB = parseFloat(b.price.replace(",", "."));
+        var priceA = parseFloat(a.totalPrice),
+          priceB = parseFloat(b.totalPrice);
         return priceA - priceB;
       });
       setData(sortedTicket);
       setIsDescending(false);
     } else {
       sortedTicket.sort(function (a, b) {
-        var priceA = parseFloat(a.price.replace(",", ".")),
-          priceB = parseFloat(b.price.replace(",", "."));
+        var priceA = parseFloat(a.totalPrice),
+          priceB = parseFloat(b.totalPrice);
         return priceB - priceA;
       });
       setData(sortedTicket);
@@ -241,7 +238,7 @@ export default function TicketScreen({ navigation }) {
     }
   };
 
-//Affichage de l'écran
+  //Design de l'écran
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.button}>
@@ -330,11 +327,12 @@ export default function TicketScreen({ navigation }) {
               logo={logoHandler(item.brand)}
               manuel={typeHandler(item.type)}
               title={
-                item.date.substring(0, 10) +
+                item.date.substring(8, 10) +
+                item.date.substring(4, 7) +
+                "-" +
+                item.date.substring(0, 4) +
                 "     " +
-                parseFloat(item.price.replace(",", "."))
-                  .toFixed(2)
-                  .replace(".", ",") +
+                parseFloat(item.totalPrice).toFixed(2).replace(".", ",") +
                 "€"
               }
             />
@@ -372,7 +370,5 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     alignItems: "center",
   },
-  search: {
-
-  },
+  search: {},
 });

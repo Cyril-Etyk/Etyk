@@ -21,11 +21,29 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 
 const TicketInfo = (props) => {
-  //DATA PREPARATION
+  //Initialisation des variables
   const data = props.data[0];
   const [manualTicket, setManualTicket] = useState(false);
+  const [showArticle2, setShowArticle2] = useState(false);
+  const [showArticle3, setShowArticle3] = useState(false);
+  const brand = data.brand.toUpperCase();
+  const price = parseFloat(data.totalPrice).toFixed(2).replace(".", ",") + "€";
+  const hour = parseInt(data.date.substring(12, 13)) + 1;
+  const date =
+    data.date.substring(8, 10) +
+    data.date.substring(4, 7) +
+    "-" +
+    data.date.substring(0, 4) +
+    "  " +
+    data.date.substring(11, 12) +
+    hour +
+    data.date.substring(13, 16);
+  const note = data.note;
+  const type = data.type;
 
+  //Lancement de fonctions à l'ouverture de la page
   useEffect(() => {
+    articleHandler();
     addressHandler();
     if (data.type == "Manuel") {
       setManualTicket(true);
@@ -34,16 +52,21 @@ const TicketInfo = (props) => {
     }
   }, []);
 
-  const brand = data.brand.toUpperCase();
-  const price = data.price;
-  const priceHt =
-    parseFloat(price.replace(",", ".")).toFixed(2).replace(".", ",") + "€";
-  const priceT = parseFloat(price.replace(",", ".")) * 1.21;
-  const priceTTC = parseFloat(priceT).toFixed(2).replace(".", ",") + "€";
-  const date = data.date.substring(0, 10) + "  " + data.date.substring(11, 19);
-  const note = data.note;
-  const type = data.type;
+  //Gestion de l'affichage des articles 2 et 3
+  const articleHandler = () => {
+    if (data.articles[3] !== null) {
+      setShowArticle2(true);
+    } else {
+      setShowArticle2(false);
+    }
+    if (data.articles[6] !== null) {
+      setShowArticle3(true);
+    } else {
+      setShowArticle3(false);
+    }
+  };
 
+  //Gestion de l'adresse d'une enseigne
   const [adres, setAdres] = useState("");
   const addressHandler = () => {
     const address = brand.toLowerCase().replace(/\s/g, "");
@@ -62,6 +85,7 @@ const TicketInfo = (props) => {
     }
   };
 
+  //Gestion de l'affichage des logos
   const logoHandler = () => {
     let logo = brand.toLowerCase().replace(/\s/g, "");
     if (logo === "etyk") {
@@ -79,7 +103,7 @@ const TicketInfo = (props) => {
     }
   };
 
-  //CAMERA & PHOTO CONTROL
+  //Fonctions de controle et de gestion de la caméra pour la prise de photo
   const [isVerifyingPhoto, setIsVerifyingPhoto] = useState(true);
   const [photoTitle, setPhotoTitle] = useState("");
   const [takePhoto, setTakePhoto] = useState(false);
@@ -101,9 +125,7 @@ const TicketInfo = (props) => {
       })
         .then((response) => response.json())
         .then((responseJson) => {
-          //Hide Loader
           setIsVerifyingPhoto(false);
-          // If server response message same as Data Matched
           if (responseJson.status == 0) {
             setPhotoURI(responseJson.photo);
             setPhotoTitle("Voir photo");
@@ -186,7 +208,7 @@ const TicketInfo = (props) => {
     }
   };
 
-  //DELETE AND RETURN FUNCTIONS
+//Fonctions de retour et de supression de ticket
   const deleteButtonHandler = () => {
     Alert.alert(
       "Supprimer",
@@ -218,9 +240,11 @@ const TicketInfo = (props) => {
   const cancelPhotoHandler = () => {
     setPhotoModal(false);
   };
+
+//À compléter
   const removePhotoHandler = () => {};
 
-  //PAGE DESIGN
+//Design de la page
   return (
     <Modal visible={props.visible} animationType="slide">
       <TouchableWithoutFeedback
@@ -231,7 +255,7 @@ const TicketInfo = (props) => {
         <SafeAreaView style={styles.screen}>
           <Image
             source={logoHandler()}
-            style={{ resizeMode: "contain", margin: 30, borderWidth: 1 }}
+            style={{ resizeMode: "contain", margin: 15, borderWidth: 1 }}
           />
           {isVerifyingPhoto ? (
             <ActivityIndicator />
@@ -258,37 +282,37 @@ const TicketInfo = (props) => {
           </View>
           <View style={styles.articleContainer}>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>T-shirt homme M: </Text>
-              <Text style={styles.textInfo}>12€/u</Text>
+              <Text style={styles.articleTop}>{data.articles[0]}: </Text>
+              <Text style={styles.textInfoTop}>{data.articles[1]}€ /u</Text>
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.text}>Quantité: </Text>
-              <Text style={styles.textInfo}>3</Text>
+              <Text style={styles.textInfo}>{data.articles[2]}</Text>
             </View>
-            <View style={styles.articleContainer}>
-              <View style={styles.textContainer}>
-                <Text style={styles.text}>Chausettes Sport: </Text>
-                <Text style={styles.textInfo}>1,16€/u</Text>
+            {showArticle2 ? (
+              <View style={styles.articleContainer}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.articleTop}>{data.articles[3]} : </Text>
+                  <Text style={styles.textInfoTop}>{data.articles[4]}€ /u</Text>
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>Quantité: </Text>
+                  <Text style={styles.textInfo}>{data.articles[5]}</Text>
+                </View>
               </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.text}>Quantité: </Text>
-                <Text style={styles.textInfo}>3</Text>
+            ) : null}
+            {showArticle3 ? (
+              <View style={styles.articleContainer}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.articleTop}>{data.articles[6]} : </Text>
+                  <Text style={styles.textInfoTop}>{data.articles[7]}€ /u</Text>
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>Quantité: </Text>
+                  <Text style={styles.textInfo}>{data.articles[8]}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.articleContainer}>
-              <View style={styles.textContainer}>
-                <Text style={styles.text}>Promotion : </Text>
-                <Text style={styles.textInfo}>-5€</Text>
-              </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.text}>Prix HT: </Text>
-                <Text style={styles.textInfo}>{priceHt}</Text>
-              </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.text}>Prix TTC: </Text>
-                <Text style={styles.textInfo}>{priceTTC}</Text>
-              </View>
-            </View>
+            ) : null}
           </View>
 
           {photoModal ? (
@@ -302,12 +326,16 @@ const TicketInfo = (props) => {
           ) : null}
           <View style={styles.container}>
             <View style={styles.textContainer}>
+              <Text style={styles.articleTop}>Prix total: </Text>
+              <Text style={styles.textInfoTop}>{price}</Text>
+            </View>
+            <View style={styles.textContainer}>
               <Text style={styles.text}>Date d'émission: </Text>
               <Text style={styles.textInfo}>{date}</Text>
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.text}>N° de transaction: </Text>
-              <Text style={styles.textInfo}>xyz3323dfdf11</Text>
+              <Text style={styles.textInfo}>#1XDUZUIZ4842ZZD</Text>
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.text}>Type de ticket: </Text>
@@ -347,7 +375,8 @@ const TicketInfo = (props) => {
   );
 };
 
-//STYLE
+
+//Style de la page
 const styles = StyleSheet.create({
   screen: {
     justifyContent: "center",
@@ -355,7 +384,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textContainer: {
-    padding: 2,
     flexDirection: "row",
     alignItems: "flex-start",
   },
@@ -371,17 +399,24 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   articleContainer: {
-    marginVertical: 7,
     alignItems: "flex-start",
   },
+  articleTop: {
+    marginTop: 10,
+    fontWeight: "bold",
+  },
+  textInfoTop: {
+    fontWeight: "bold",
+    color: "blue",
+    marginTop: 10,
+  },
   container: {
-    marginVertical: 7,
     alignItems: "flex-start",
   },
   containerPhoto: {
     alignItems: "center",
     justifyContent: "center",
-    margin: 5,
+    margin: 10,
   },
 });
 

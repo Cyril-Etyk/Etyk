@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { userName, userIdKey } from "../../constants/keys.js";
 
 const SettingsScreen = ({ navigation }) => {
+
   //Initialise states
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
@@ -344,6 +345,7 @@ const SettingsScreen = ({ navigation }) => {
     </View>
   );
 };
+
 //Styling
 const styles = StyleSheet.create({
   screen: { flex: 1, alignItems: "center", justifyContent: "center" },
