@@ -44,7 +44,6 @@ const TicketInfo = (props) => {
   //Lancement de fonctions à l'ouverture de la page
   useEffect(() => {
     articleHandler();
-    addressHandler();
     if (data.type == "Manuel") {
       setManualTicket(true);
     } else {
@@ -67,23 +66,10 @@ const TicketInfo = (props) => {
   };
 
   //Gestion de l'adresse d'une enseigne
-  const [adres, setAdres] = useState("");
-  const addressHandler = () => {
-    const address = brand.toLowerCase().replace(/\s/g, "");
-    if (address === "etyk") {
-      setAdres("Rue des Pirouettes 24,\n1050 Ixelles");
-    } else if (address === "h&m") {
-      setAdres("Rue Neuve 17/21,\n1000 Bruxelles");
-    } else if (address === "zara") {
-      setAdres("Avenue de la T. d'Or 25/29,\n1000 Bruxelles");
-    } else if (address === "colruyt") {
-      setAdres("Avenue des A. Combattants 42,\n1140 Evere");
-    } else if (address === "timberland") {
-      setAdres("Rue du M. Aux Herbes 20,\n1000 Bruxelles");
-    } else {
-      setAdres("Pas encore partenaire de ETYK");
-    }
-  };
+  const address =
+    data.address[0] + ",\n" + data.address[1] + " " + data.address[2];
+  const dataTelNr = data.telNr;
+  const telNr = dataTelNr.substring(0,4) + "/" + dataTelNr.substring(4,6)+ "." + dataTelNr.substring(6,8) + "." + dataTelNr.substring(8,10  );
 
   //Gestion de l'affichage des logos
   const logoHandler = () => {
@@ -274,15 +260,17 @@ const TicketInfo = (props) => {
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.text}>Adresse</Text>
-              <Text onLoad={addressHandler} style={styles.textInfo}>
-                {adres}
-              </Text>
+              <Text style={styles.textInfo}>{address}</Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>Numéro de téléphone</Text>
+              <Text style={styles.textInfo}>{telNr}</Text>
             </View>
           </View>
           <View style={styles.articleContainer}>
             <View style={styles.textContainer}>
               <Text style={styles.articleTop}>{data.articles[0]}</Text>
-              <Text style={styles.textInfoTop}>{data.articles[1]}€ /u</Text>
+              <Text style={styles.textInfoTop}>{data.articles[1]}€</Text>
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.text}>Quantité</Text>
@@ -292,7 +280,7 @@ const TicketInfo = (props) => {
               <View>
                 <View style={styles.textContainer}>
                   <Text style={styles.articleTop}>{data.articles[3]}</Text>
-                  <Text style={styles.textInfoTop}>{data.articles[4]}€ /u</Text>
+                  <Text style={styles.textInfoTop}>{data.articles[4]}€</Text>
                 </View>
                 <View style={styles.textContainer}>
                   <Text style={styles.text}>Quantité</Text>
@@ -304,7 +292,7 @@ const TicketInfo = (props) => {
               <View>
                 <View style={styles.textContainer}>
                   <Text style={styles.articleTop}>{data.articles[6]}</Text>
-                  <Text style={styles.textInfoTop}>{data.articles[7]}€ /u</Text>
+                  <Text style={styles.textInfoTop}>{data.articles[7]}€</Text>
                 </View>
                 <View style={styles.textContainer}>
                   <Text style={styles.text}>Quantité</Text>
@@ -386,10 +374,15 @@ const styles = StyleSheet.create({
   textContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginHorizontal: 40,
+    marginHorizontal: 50,
   },
   container: {
     justifyContent: "flex-start",
+        borderWidth: 1,
+        borderRadius: 5,
+        margin: 5,
+        paddingVertical: 4
+
   },
   text: {
     fontWeight: "bold",
@@ -408,13 +401,13 @@ const styles = StyleSheet.create({
   articleContainer: {
     justifyContent: "space-between",
     borderWidth: 1,
-    marginHorizontal: 15,
-    marginVertical: 2
+    borderRadius: 5,
+    marginHorizontal: 20,
+    marginVertical: 2,
   },
   articleTop: {
     marginTop: 7,
     fontWeight: "bold",
-
   },
   textInfoTop: {
     fontWeight: "bold",

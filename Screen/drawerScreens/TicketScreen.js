@@ -106,7 +106,7 @@ export default function TicketScreen({ navigation }) {
   };
 
   //Créer un nouveau ticket MANUEL
-  const addTicketHandler = (brand, articles, totalPrice, note, date) => {
+  const addTicketHandler = (brand, street, postalCode, region, telNr, articles, totalPrice, note, date) => {
     try {
       AsyncStorage.getItem(userIdKey)
         .then((userIdKey) => {
@@ -119,6 +119,8 @@ export default function TicketScreen({ navigation }) {
             body: JSON.stringify({
               user_id: userIdKey,
               brand: brand.replace(/\s/g, ""),
+              address: [street, postalCode, region],
+              telNr: telNr,
               articles: articles,
               totalPrice: totalPrice,
               date: date,

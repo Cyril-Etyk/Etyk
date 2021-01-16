@@ -74,7 +74,7 @@ const SearchPane = (props) => {
             <TextInput
               style={styles.inputStyle}
               onChangeText={filterTicketHandler}
-              placeholder="Ex : Timberland, 22€, 2021-01-01 " //exemple@abc.com
+              placeholder="Timberland |  22€ |  2021-01-01 " //exemple@abc.com
               placeholderTextColor="grey"
               maxLength={23}
               blurOnSubmit={false}
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 14,
     paddingLeft: 10,
-    paddingRight: 10,
+    paddingRight: 15,
   },
   button: {
     margin: 25,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     flexDirection: "row",
-    margin: 10,
+    margin: 5,
     marginTop: 25,
   },
   buttonStyle: {

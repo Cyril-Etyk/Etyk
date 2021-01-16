@@ -38,6 +38,10 @@ const TicketAdd = (props) => {
   //Other data handler functions
   const [showArticle, setShowArticle] = useState(false);
   const [brand, setBrand] = useState("");
+  const [street, setStreet] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [region, setRegion] = useState("");
+  const [telNr, setTelNr] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
   const [note, setNote] = useState("");
   const [articles, setArticles] = useState([]);
@@ -53,6 +57,18 @@ const TicketAdd = (props) => {
 
   const brandInputHandler = (input) => {
     setBrand(input.replace(/[^a-zA-Z& ]/g, ""));
+  };
+  const streetInputHandler = (input) => {
+    setStreet(input.replace(/[^a-zA-Z& ^0-9]/g, ""));
+  };
+  const postalCodeInputHandler = (input) => {
+    setPostalCode(input.replace(/[^0-9]/g, ""));
+  };
+  const regionInputHandler = (input) => {
+    setRegion(input.replace(/[^a-zA-Z- ]/g, ""));
+  };
+  const telNrInputHandler = (input) => {
+    setTelNr(input.replace(/[^0-9,]/g, ""));
   };
   const article1Handler = (input) => {
     setArticle1(input.replace(/[^a-zA-Z& ^0-9]/g, ""));
@@ -112,8 +128,12 @@ const TicketAdd = (props) => {
         return;
       }
       if (articles[0] !== undefined) {
-        props.onAddTicket(brand, articles, totalPrice, note, date);
+        props.onAddTicket(brand, street, postalCode, region, telNr, articles, totalPrice, note, date);
         setBrand("");
+        setStreet("");
+        setPostalCode("");
+        setRegion("");
+        setTelNr("");
         setArticles([]);
         setArticle1("");
         setPrice1("");
@@ -161,8 +181,12 @@ const TicketAdd = (props) => {
         return;
       }
       if (articles[0] !== undefined) {
-        props.onAddTicket(brand, articles, totalPrice, note, date);
+        props.onAddTicket(brand, street, postalCode, region, telNr, articles, totalPrice, note, date);
         setBrand("");
+        setStreet("");
+        setPostalCode("");
+        setRegion("");
+        setTelNr("");
         setArticles([]);
         setArticle1("");
         setPrice1("");
@@ -223,8 +247,12 @@ const TicketAdd = (props) => {
         amount3,
       ]);
       if (articles[0] !== undefined) {
-        props.onAddTicket(brand, articles, totalPrice, note, date);
+        props.onAddTicket(brand, street, postalCode, region, telNr, articles, totalPrice, note, date);
         setBrand("");
+        setStreet("");
+        setPostalCode("");
+        setRegion("");
+        setTelNr("");
         setArticles([]);
         setArticle1("");
         setPrice1("");
@@ -276,7 +304,7 @@ const TicketAdd = (props) => {
         <SafeAreaView style={styles.screen}>
           <TextInput
             placeholder="Enseigne"
-            style={styles.input}
+            style={styles.inputBrand}
             autoCorrect={false}
             maxLength={15}
             onChangeText={brandInputHandler}
@@ -287,9 +315,9 @@ const TicketAdd = (props) => {
             placeholder="Rue et numéro"
             style={styles.input}
             autoCorrect={false}
-            maxLength={15}
-            onChangeText={brandInputHandler}
-            value={brand}
+            maxLength={20}
+            onChangeText={streetInputHandler}
+            value={street}
             autoCapitalize="characters"
           />
           <View style={styles.articleContainer}>
@@ -297,19 +325,27 @@ const TicketAdd = (props) => {
               placeholder="CP"
               style={styles.inputTop}
               autoCorrect={false}
-              maxLength={10}
-              onChangeText={price1Handler}
-              value={price1}
+              maxLength={4}
+              onChangeText={postalCodeInputHandler}
+              value={postalCode}
             />
             <TextInput
               placeholder="Ville"
               style={styles.inputTop}
               autoCorrect={false}
-              maxLength={3}
-              onChangeText={amount1Handler}
-              value={amount1}
+              maxLength={15}
+              onChangeText={regionInputHandler}
+              value={region}
             />
           </View>
+          <TextInput
+            placeholder="Numéro de téléphone"
+            style={styles.inputTop}
+            autoCorrect={false}
+            maxLength={13}
+            onChangeText={telNrInputHandler}
+            value={telNr}
+          />
           <TextInput
             placeholder="Article 1"
             style={styles.input}
@@ -478,6 +514,16 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   input: {
+    borderColor: "black",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    backgroundColor: "white",
+    width: "50%",
+    borderRadius: 5,
+    margin: 1,
+  },
+  inputBrand: {
+    marginTop: 50,
     borderColor: "black",
     borderWidth: 1,
     paddingHorizontal: 10,
