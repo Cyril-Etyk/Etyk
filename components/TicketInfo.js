@@ -71,15 +71,15 @@ const TicketInfo = (props) => {
   const addressHandler = () => {
     const address = brand.toLowerCase().replace(/\s/g, "");
     if (address === "etyk") {
-      setAdres("Rue des Pirouettes 24,\n 1050 Ixelles");
+      setAdres("Rue des Pirouettes 24,\n1050 Ixelles");
     } else if (address === "h&m") {
-      setAdres("Rue Neuve 17/21,\n 1000 Bruxelles");
+      setAdres("Rue Neuve 17/21,\n1000 Bruxelles");
     } else if (address === "zara") {
-      setAdres("Avenue de la T. d'Or 25/29,\n 1000 Bruxelles");
+      setAdres("Avenue de la T. d'Or 25/29,\n1000 Bruxelles");
     } else if (address === "colruyt") {
-      setAdres("Avenue des A. Combattants 42,\n 1140 Evere");
+      setAdres("Avenue des A. Combattants 42,\n1140 Evere");
     } else if (address === "timberland") {
-      setAdres("Rue du M. Aux Herbes 20,\n 1000 Bruxelles");
+      setAdres("Rue du M. Aux Herbes 20,\n1000 Bruxelles");
     } else {
       setAdres("Pas encore partenaire de ETYK");
     }
@@ -208,7 +208,7 @@ const TicketInfo = (props) => {
     }
   };
 
-//Fonctions de retour et de supression de ticket
+  //Fonctions de retour et de supression de ticket
   const deleteButtonHandler = () => {
     Alert.alert(
       "Supprimer",
@@ -241,10 +241,10 @@ const TicketInfo = (props) => {
     setPhotoModal(false);
   };
 
-//À compléter
+  //À compléter
   const removePhotoHandler = () => {};
 
-//Design de la page
+  //Design de la page
   return (
     <Modal visible={props.visible} animationType="slide">
       <TouchableWithoutFeedback
@@ -253,10 +253,9 @@ const TicketInfo = (props) => {
         }}
       >
         <SafeAreaView style={styles.screen}>
-          <Image
-            source={logoHandler()}
-            style={{ resizeMode: "contain", margin: 15, borderWidth: 1 }}
-          />
+          <View style={styles.etykLogo}>
+            <Image source={logoHandler()} />
+          </View>
           {isVerifyingPhoto ? (
             <ActivityIndicator />
           ) : (
@@ -270,11 +269,11 @@ const TicketInfo = (props) => {
           )}
           <View style={styles.container}>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>Enseigne: </Text>
+              <Text style={styles.text}>Enseigne</Text>
               <Text style={styles.textInfo}>{brand}</Text>
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>Adresse: </Text>
+              <Text style={styles.text}>Adresse</Text>
               <Text onLoad={addressHandler} style={styles.textInfo}>
                 {adres}
               </Text>
@@ -282,33 +281,33 @@ const TicketInfo = (props) => {
           </View>
           <View style={styles.articleContainer}>
             <View style={styles.textContainer}>
-              <Text style={styles.articleTop}>{data.articles[0]}: </Text>
+              <Text style={styles.articleTop}>{data.articles[0]}</Text>
               <Text style={styles.textInfoTop}>{data.articles[1]}€ /u</Text>
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>Quantité: </Text>
+              <Text style={styles.text}>Quantité</Text>
               <Text style={styles.textInfo}>{data.articles[2]}</Text>
             </View>
             {showArticle2 ? (
-              <View style={styles.articleContainer}>
+              <View>
                 <View style={styles.textContainer}>
-                  <Text style={styles.articleTop}>{data.articles[3]} : </Text>
+                  <Text style={styles.articleTop}>{data.articles[3]}</Text>
                   <Text style={styles.textInfoTop}>{data.articles[4]}€ /u</Text>
                 </View>
                 <View style={styles.textContainer}>
-                  <Text style={styles.text}>Quantité: </Text>
+                  <Text style={styles.text}>Quantité</Text>
                   <Text style={styles.textInfo}>{data.articles[5]}</Text>
                 </View>
               </View>
             ) : null}
             {showArticle3 ? (
-              <View style={styles.articleContainer}>
+              <View>
                 <View style={styles.textContainer}>
-                  <Text style={styles.articleTop}>{data.articles[6]} : </Text>
+                  <Text style={styles.articleTop}>{data.articles[6]}</Text>
                   <Text style={styles.textInfoTop}>{data.articles[7]}€ /u</Text>
                 </View>
                 <View style={styles.textContainer}>
-                  <Text style={styles.text}>Quantité: </Text>
+                  <Text style={styles.text}>Quantité</Text>
                   <Text style={styles.textInfo}>{data.articles[8]}</Text>
                 </View>
               </View>
@@ -326,23 +325,23 @@ const TicketInfo = (props) => {
           ) : null}
           <View style={styles.container}>
             <View style={styles.textContainer}>
-              <Text style={styles.articleTop}>Prix total: </Text>
-              <Text style={styles.textInfoTop}>{price}</Text>
+              <Text style={styles.text}>Prix total</Text>
+              <Text style={styles.textInfo}>{price}</Text>
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>Date d'émission: </Text>
+              <Text style={styles.text}>Date d'émission</Text>
               <Text style={styles.textInfo}>{date}</Text>
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>N° de transaction: </Text>
+              <Text style={styles.text}>N° de transaction</Text>
               <Text style={styles.textInfo}>#1XDUZUIZ4842ZZD</Text>
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>Type de ticket: </Text>
+              <Text style={styles.text}>Type de ticket</Text>
               <Text style={styles.textInfo}>{type}</Text>
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>Note: </Text>
+              <Text style={styles.text}>Note</Text>
               <Text style={styles.textInfo}>{note}</Text>
             </View>
           </View>
@@ -375,17 +374,22 @@ const TicketInfo = (props) => {
   );
 };
 
-
 //Style de la page
 const styles = StyleSheet.create({
   screen: {
     justifyContent: "center",
-    alignItems: "center",
     flex: 1,
+  },
+  etykLogo: {
+    alignItems: "center",
   },
   textContainer: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    justifyContent: "space-between",
+    marginHorizontal: 40,
+  },
+  container: {
+    justifyContent: "flex-start",
   },
   text: {
     fontWeight: "bold",
@@ -393,30 +397,37 @@ const styles = StyleSheet.create({
   textInfo: {
     fontWeight: "bold",
     color: "blue",
+    marginBottom: 5,
+    textAlign: "right",
   },
   button: {
     marginTop: 20,
     justifyContent: "space-between",
+    alignItems: "center",
   },
   articleContainer: {
-    alignItems: "flex-start",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    marginHorizontal: 15,
+    marginVertical: 2
   },
   articleTop: {
-    marginTop: 10,
+    marginTop: 7,
     fontWeight: "bold",
+
   },
   textInfoTop: {
     fontWeight: "bold",
     color: "blue",
-    marginTop: 10,
-  },
-  container: {
-    alignItems: "flex-start",
+    marginTop: 7,
+    textAlign: "right",
   },
   containerPhoto: {
     alignItems: "center",
     justifyContent: "center",
-    margin: 10,
+    margin: 15,
+    marginBottom: 25,
+    alignItems: "center",
   },
 });
 

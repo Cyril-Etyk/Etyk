@@ -103,7 +103,7 @@ const TicketAdd = (props) => {
     }
 
     if (article2.length <= 0 && price2.length <= 0 && amount2.length <= 0) {
-      setTotalPrice(parseFloat(price1.replace(",",".")) * amount1);
+      setTotalPrice(parseFloat(price1.replace(",", ".")) * amount1);
       setArticles([article1, price1, amount1]);
       if (!validatePrice(price1)) {
         alert(
@@ -143,7 +143,10 @@ const TicketAdd = (props) => {
       price3.length <= 0 &&
       amount3.length <= 0
     ) {
-      setTotalPrice(parseFloat(price1.replace(",",".")) * amount1 + parseFloat(price2.replace(",",".")) * amount2);
+      setTotalPrice(
+        parseFloat(price1.replace(",", ".")) * amount1 +
+          parseFloat(price2.replace(",", ".")) * amount2
+      );
       setArticles([article1, price1, amount1, article2, price2, amount2]);
       if (!validatePrice(price1)) {
         alert(
@@ -203,7 +206,11 @@ const TicketAdd = (props) => {
         );
         return;
       }
-      setTotalPrice(parseFloat(price1.replace(",",".")) * amount1 + parseFloat(price2.replace(",",".")) * amount2 + parseFloat(price3.replace(",",".")) * amount3);
+      setTotalPrice(
+        parseFloat(price1.replace(",", ".")) * amount1 +
+          parseFloat(price2.replace(",", ".")) * amount2 +
+          parseFloat(price3.replace(",", ".")) * amount3
+      );
       setArticles([
         article1,
         price1,
@@ -217,6 +224,21 @@ const TicketAdd = (props) => {
       ]);
       if (articles[0] !== undefined) {
         props.onAddTicket(brand, articles, totalPrice, note, date);
+        setBrand("");
+        setArticles([]);
+        setArticle1("");
+        setPrice1("");
+        setAmount1("");
+        setArticle2("");
+        setPrice2("");
+        setAmount2("");
+        setArticle3("");
+        setPrice3("");
+        setAmount3("");
+        setShowArticle(false);
+        setNote("");
+        setTotalPrice("");
+        setDate(new Date());
       } else {
         return;
       }
@@ -261,6 +283,33 @@ const TicketAdd = (props) => {
             value={brand}
             autoCapitalize="characters"
           />
+          <TextInput
+            placeholder="Rue et numéro"
+            style={styles.input}
+            autoCorrect={false}
+            maxLength={15}
+            onChangeText={brandInputHandler}
+            value={brand}
+            autoCapitalize="characters"
+          />
+          <View style={styles.articleContainer}>
+            <TextInput
+              placeholder="CP"
+              style={styles.inputTop}
+              autoCorrect={false}
+              maxLength={10}
+              onChangeText={price1Handler}
+              value={price1}
+            />
+            <TextInput
+              placeholder="Ville"
+              style={styles.inputTop}
+              autoCorrect={false}
+              maxLength={3}
+              onChangeText={amount1Handler}
+              value={amount1}
+            />
+          </View>
           <TextInput
             placeholder="Article 1"
             style={styles.input}
@@ -332,7 +381,7 @@ const TicketAdd = (props) => {
             <View style={styles.articleContainer}>
               <TextInput
                 placeholder="Prix"
-                style={styles.input}
+                style={styles.inputTop}
                 autoCorrect={false}
                 maxLength={10}
                 onChangeText={price3Handler}
@@ -341,7 +390,7 @@ const TicketAdd = (props) => {
               />
               <TextInput
                 placeholder="Nombre"
-                style={styles.input}
+                style={styles.inputTop}
                 autoCorrect={false}
                 maxLength={3}
                 onChangeText={amount3Handler}
@@ -353,7 +402,7 @@ const TicketAdd = (props) => {
           <View style={styles.addArticle}>
             <Button
               title="Ajouter un article"
-              color={colors.accent}
+              color={colors.focus}
               onPress={addArticleHandler}
             />
           </View>
@@ -369,12 +418,12 @@ const TicketAdd = (props) => {
             <Button
               onPress={showDatepicker}
               title="Date"
-              color={colors.accent}
+              color={colors.focus}
             />
             <Button
               onPress={showTimepicker}
               title="Heure"
-              color={colors.accent}
+              color={colors.focus}
             />
           </View>
 
@@ -426,23 +475,32 @@ const styles = StyleSheet.create({
     width: "45%",
   },
   addArticle: {
-    marginVertical: 5,
+    marginBottom: 7,
   },
   input: {
     borderColor: "black",
     borderWidth: 1,
-    padding: 3,
     paddingHorizontal: 10,
     backgroundColor: "white",
-    width: "65%",
-    margin: 2,
+    width: "50%",
     borderRadius: 5,
+    margin: 1,
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     width: "45%",
     marginVertical: 5,
+  },
+  inputTop: {
+    borderColor: "black",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    backgroundColor: "white",
+    width: "50%",
+    borderRadius: 5,
+    margin: 1,
+    marginBottom: 7,
   },
 });
 

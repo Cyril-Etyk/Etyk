@@ -241,7 +241,7 @@ const SettingsScreen = ({ navigation }) => {
         ) : null}
         <Button
           title="Changer"
-          color={colors.accent}
+          color={colors.focus}
           style={styles.subButton}
           onPress={showNameModal}
         />
@@ -337,7 +337,7 @@ const SettingsScreen = ({ navigation }) => {
         <Text style={styles.subText}>Mot de passe</Text>
         <Button
           title="Changer"
-          color={colors.accent}
+          color={colors.focus}
           style={styles.subButton}
           onPress={showPasswordModal}
         />
