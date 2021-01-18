@@ -74,7 +74,7 @@ const SettingsScreen = ({ navigation }) => {
       return;
     }
     try {
-      fetch("http://165.232.75.50:5000/api/user/changePw", {
+      fetch("https://etyk.be/api/user/changePw", {
         method: "PATCH",
         headers: {
           Accept: "application/json",
@@ -134,7 +134,7 @@ const SettingsScreen = ({ navigation }) => {
       alert("Veuillez encoder au minimum une lettre");
       return;
     }
-    fetch("http://165.232.75.50:5000/api/user/changeName", {
+    fetch("https://etyk.be/api/user/changeName", {
       method: "PATCH",
       headers: {
         Accept: "application/json",

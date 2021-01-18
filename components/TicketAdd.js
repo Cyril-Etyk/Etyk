@@ -342,7 +342,7 @@ const TicketAdd = (props) => {
             placeholder="Numéro de téléphone"
             style={styles.inputTop}
             autoCorrect={false}
-            maxLength={13}
+            maxLength={10}
             onChangeText={telNrInputHandler}
             value={telNr}
           />

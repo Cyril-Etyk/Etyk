@@ -54,7 +54,7 @@ const LoginScreen = (props) => {
       return;
     }
     setLoading(true);
-    fetch("http://165.232.75.50:5000/api/user/login", {
+    fetch("https://etyk.be/api/user/login", {
       method: "POST",
       headers: {
         Accept: "application/json",

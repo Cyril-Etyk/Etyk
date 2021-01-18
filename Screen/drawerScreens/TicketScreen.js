@@ -35,7 +35,7 @@ export default function TicketScreen({ navigation }) {
   useEffect(() => {
     try {
       AsyncStorage.getItem(userIdKey).then((userIdKey) => {
-        fetch("http://165.232.75.50:5000/api/tickets/" + userIdKey)
+        fetch("https://etyk.be/api/tickets/" + userIdKey)
           .then((response) => response.json())
           .then((json) => setData(json.reverse()))
           .catch((error) => console.error(error))
@@ -110,7 +110,7 @@ export default function TicketScreen({ navigation }) {
     try {
       AsyncStorage.getItem(userIdKey)
         .then((userIdKey) => {
-          fetch("http://165.232.75.50:5000/api/tickets", {
+          fetch("https://etyk.be/api/tickets", {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -142,7 +142,7 @@ export default function TicketScreen({ navigation }) {
 
   //Supprimer un ticket MANUEL
   const removeTicketHandler = (toDelete) => {
-    let toFetch = "http://165.232.75.50:5000/api/tickets/" + toDelete;
+    let toFetch = "https://etyk.be/api/tickets/" + toDelete;
     fetch(toFetch, {
       method: "DELETE",
       headers: {

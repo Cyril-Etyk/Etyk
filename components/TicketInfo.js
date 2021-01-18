@@ -98,7 +98,7 @@ const TicketInfo = (props) => {
 
   useEffect(() => {
     try {
-      fetch("http://165.232.75.50:5000/api/photo/verifyPhoto", {
+      fetch("https://etyk.be/api/photo/verifyPhoto", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -159,7 +159,7 @@ const TicketInfo = (props) => {
         });
         // make sure a image was taken:
         if (!image.cancelled) {
-          fetch("http://165.232.75.50:5000/api/photo/post", {
+          fetch("https://etyk.be/api/photo/post", {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -374,15 +374,15 @@ const styles = StyleSheet.create({
   textContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginHorizontal: 50,
+    marginHorizontal: 30,
   },
   container: {
     justifyContent: "flex-start",
         borderWidth: 1,
         borderRadius: 5,
         margin: 5,
-        paddingVertical: 4
-
+        paddingVertical: 4,
+        marginHorizontal: 10
   },
   text: {
     fontWeight: "bold",
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderWidth: 1,
     borderRadius: 5,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     marginVertical: 2,
   },
   articleTop: {

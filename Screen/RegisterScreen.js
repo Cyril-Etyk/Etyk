@@ -65,7 +65,7 @@ const RegisterScreen = (props) => {
     //Show Loader
     setLoading(true);
 
-    fetch("http://165.232.75.50:5000/api/user/register", {
+    fetch("https://etyk.be/api/user/register", {
       method: "POST",
       headers: {
         Accept: "application/json",
