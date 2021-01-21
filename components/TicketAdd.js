@@ -9,6 +9,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   SafeAreaView,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import colors from "../constants/colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -37,8 +39,10 @@ const TicketAdd = (props) => {
 
   //Other data handler functions
   const [showArticle, setShowArticle] = useState(false);
+  const [showArticle3, setShowArticle3] = useState(false);
   const [brand, setBrand] = useState("");
   const [street, setStreet] = useState("");
+  const [number, setNumber] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [region, setRegion] = useState("");
   const [telNr, setTelNr] = useState("");
@@ -60,6 +64,9 @@ const TicketAdd = (props) => {
   };
   const streetInputHandler = (input) => {
     setStreet(input.replace(/[^a-zA-Z& ^0-9]/g, ""));
+  };
+  const numberHandler = (input) => {
+    setNumber(input.replace(/[^0-9]/g, ""));
   };
   const postalCodeInputHandler = (input) => {
     setPostalCode(input.replace(/[^0-9]/g, ""));
@@ -108,6 +115,10 @@ const TicketAdd = (props) => {
     };
     if (
       brand.length <= 0 ||
+      street.length <= 0 ||
+      number.length <= 0 ||
+      postalCode.length <= 0 ||
+      region.length <= 0 ||
       article1.length <= 0 ||
       price1.length <= 0 ||
       amount1.length <= 0
@@ -128,7 +139,18 @@ const TicketAdd = (props) => {
         return;
       }
       if (articles[0] !== undefined) {
-        props.onAddTicket(brand, street, postalCode, region, telNr, articles, totalPrice, note, date);
+        setStreet(street + " " + number);
+        props.onAddTicket(
+          brand,
+          street,
+          postalCode,
+          region,
+          telNr,
+          articles,
+          totalPrice,
+          note,
+          date
+        );
         setBrand("");
         setStreet("");
         setPostalCode("");
@@ -181,7 +203,18 @@ const TicketAdd = (props) => {
         return;
       }
       if (articles[0] !== undefined) {
-        props.onAddTicket(brand, street, postalCode, region, telNr, articles, totalPrice, note, date);
+        setStreet(street + " " + number);
+        props.onAddTicket(
+          brand,
+          street,
+          postalCode,
+          region,
+          telNr,
+          articles,
+          totalPrice,
+          note,
+          date
+        );
         setBrand("");
         setStreet("");
         setPostalCode("");
@@ -247,7 +280,18 @@ const TicketAdd = (props) => {
         amount3,
       ]);
       if (articles[0] !== undefined) {
-        props.onAddTicket(brand, street, postalCode, region, telNr, articles, totalPrice, note, date);
+        setStreet(street + " " + number);
+        props.onAddTicket(
+          brand,
+          street,
+          postalCode,
+          region,
+          telNr,
+          articles,
+          totalPrice,
+          note,
+          date
+        );
         setBrand("");
         setStreet("");
         setPostalCode("");
@@ -274,7 +318,26 @@ const TicketAdd = (props) => {
   };
 
   const addArticleHandler = () => {
-    setShowArticle(true);
+    if (!showArticle) {
+      setShowArticle(true);
+    } else if (showArticle) {
+      setShowArticle3(true);
+    } else {
+      return;
+    }
+  };
+  const deleteArticle2Handler = () => {
+    setShowArticle(false);
+    setArticle2("");
+    setPrice2("");
+    setAmount2("");
+  };
+
+  const deleteArticle3Handler = () => {
+    setShowArticle3(false);
+    setArticle3("");
+    setPrice3("");
+    setAmount3("");
   };
 
   const cancelAddHandler = () => {
@@ -310,114 +373,193 @@ const TicketAdd = (props) => {
             onChangeText={brandInputHandler}
             value={brand}
             autoCapitalize="characters"
-          />
-          <TextInput
-            placeholder="Rue et numéro"
-            style={styles.input}
-            autoCorrect={false}
-            maxLength={20}
-            onChangeText={streetInputHandler}
-            value={street}
-            autoCapitalize="characters"
+            ref={(ref) => {
+              this._brand = ref;
+            }}
+            returnKeyType="next"
+            onSubmitEditing={() => this._street && this._street.focus()}
+            blurOnSubmit={false}
           />
           <View style={styles.articleContainer}>
             <TextInput
+              placeholder="Rue"
+              style={styles.input}
+              autoCorrect={false}
+              maxLength={20}
+              onChangeText={streetInputHandler}
+              value={street}
+              autoCapitalize="characters"
+              ref={(ref) => {
+                this._street = ref;
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => this._number && this._number.focus()}
+              blurOnSubmit={false}
+            />
+            <TextInput
+              placeholder="Numéro"
+              style={styles.input}
+              autoCorrect={false}
+              maxLength={4}
+              onChangeText={numberHandler}
+              value={number}
+              autoCapitalize="characters"
+              ref={(ref) => {
+                this._number = ref;
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => this._cp && this._cp.focus()}
+              blurOnSubmit={false}
+            />
+          </View>
+          <View style={styles.articleContainer}>
+            <TextInput
               placeholder="CP"
-              style={styles.inputTop}
+              style={styles.input}
               autoCorrect={false}
               maxLength={4}
               onChangeText={postalCodeInputHandler}
               value={postalCode}
+              ref={(ref) => {
+                this._cp = ref;
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => this._region && this._region.focus()}
+              blurOnSubmit={false}
             />
             <TextInput
               placeholder="Ville"
-              style={styles.inputTop}
+              style={styles.input}
               autoCorrect={false}
               maxLength={15}
               onChangeText={regionInputHandler}
               value={region}
+              ref={(ref) => {
+                this._region = ref;
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => this._telnr && this._telnr.focus()}
+              blurOnSubmit={false}
             />
           </View>
           <TextInput
             placeholder="Numéro de téléphone"
-            style={styles.inputTop}
+            style={styles.inputTelNr}
             autoCorrect={false}
             maxLength={10}
             onChangeText={telNrInputHandler}
             value={telNr}
+            ref={(ref) => {
+              this._telnr = ref;
+            }}
+            returnKeyType="next"
+            onSubmitEditing={() => this._article1 && this._article1.focus()}
+            blurOnSubmit={false}
           />
           <TextInput
             placeholder="Article 1"
-            style={styles.input}
+            style={styles.inputArticle}
             autoCorrect={false}
             maxLength={15}
             onChangeText={article1Handler}
             value={article1}
             autoCapitalize="characters"
+            ref={(ref) => {
+              this._article1 = ref;
+            }}
+            returnKeyType="next"
+            onSubmitEditing={() => this._price1 && this._price1.focus()}
+            blurOnSubmit={false}
           />
           <View style={styles.articleContainer}>
             <TextInput
               placeholder="Prix"
-              style={styles.input}
+              style={styles.inputArticleTop}
               autoCorrect={false}
               maxLength={10}
               onChangeText={price1Handler}
               value={price1}
               keyboardType="decimal-pad"
+              ref={(ref) => {
+                this._price1 = ref;
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => this._nombre1 && this._nombre1.focus()}
+              blurOnSubmit={false}
             />
             <TextInput
               placeholder="Nombre"
-              style={styles.input}
+              style={styles.inputArticleTop}
               autoCorrect={false}
               maxLength={3}
               onChangeText={amount1Handler}
               value={amount1}
               keyboardType="numeric"
-            />
-          </View>
-          <TextInput
-            placeholder="Article 2"
-            style={styles.input}
-            autoCorrect={false}
-            maxLength={15}
-            onChangeText={article2Handler}
-            value={article2}
-          />
-          <View style={styles.articleContainer}>
-            <TextInput
-              placeholder="Prix"
-              style={styles.input}
-              autoCorrect={false}
-              maxLength={10}
-              onChangeText={price2Handler}
-              value={price2}
-              keyboardType="decimal-pad"
-            />
-            <TextInput
-              placeholder="Nombre"
-              style={styles.input}
-              autoCorrect={false}
-              maxLength={3}
-              onChangeText={amount2Handler}
-              value={amount2}
-              keyboardType="numeric"
+              ref={(ref) => {
+                this._nombre1 = ref;
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => this._note && this._note.focus()}
+              blurOnSubmit={false}
             />
           </View>
           {showArticle ? (
             <TextInput
+              placeholder="Article 2"
+              style={styles.inputArticle}
+              autoCorrect={false}
+              maxLength={15}
+              onChangeText={article2Handler}
+              value={article2}
+            />
+          ) : null}
+          {showArticle ? (
+            <View style={styles.articleButtonContainer}>
+              <TextInput
+                placeholder="Prix"
+                style={styles.inputArticleTop}
+                autoCorrect={false}
+                maxLength={10}
+                onChangeText={price2Handler}
+                value={price2}
+                keyboardType="decimal-pad"
+              />
+              <TextInput
+                placeholder="Nombre"
+                style={styles.inputArticleTop}
+                autoCorrect={false}
+                maxLength={3}
+                onChangeText={amount2Handler}
+                value={amount2}
+                keyboardType="numeric"
+              />
+              {!showArticle3 ? (
+                <View style={styles.deleteArticle}>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={deleteArticle2Handler}
+                  >
+                    <Image source={require("../Image/bin.png")} />
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+            </View>
+          ) : null}
+          {showArticle3 ? (
+            <TextInput
               placeholder="Article 3"
-              style={styles.input}
+              style={styles.inputArticle}
               autoCorrect={false}
               maxLength={15}
               onChangeText={article3Handler}
               value={article3}
             />
           ) : null}
-          {showArticle ? (
-            <View style={styles.articleContainer}>
+          {showArticle3 ? (
+            <View style={styles.articleButtonContainer}>
               <TextInput
                 placeholder="Prix"
-                style={styles.inputTop}
+                style={styles.inputArticleTop}
                 autoCorrect={false}
                 maxLength={10}
                 onChangeText={price3Handler}
@@ -426,18 +568,26 @@ const TicketAdd = (props) => {
               />
               <TextInput
                 placeholder="Nombre"
-                style={styles.inputTop}
+                style={styles.inputArticleTop}
                 autoCorrect={false}
                 maxLength={3}
                 onChangeText={amount3Handler}
                 value={amount3}
                 keyboardType="numeric"
               />
+              <View style={styles.deleteArticle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={deleteArticle3Handler}
+                >
+                  <Image source={require("../Image/bin.png")} />
+                </TouchableOpacity>
+              </View>
             </View>
           ) : null}
           <View style={styles.addArticle}>
             <Button
-              title="Ajouter un article"
+              title="Ajouter article"
               color={colors.focus}
               onPress={addArticleHandler}
             />
@@ -449,6 +599,11 @@ const TicketAdd = (props) => {
             maxLength={25}
             onChangeText={noteInputHandler}
             value={note}
+            ref={(ref) => {
+              this._note = ref;
+            }}
+            onSubmitEditing={Keyboard.dismiss}
+            blurOnSubmit={false}
           />
           <View style={styles.buttonContainer}>
             <Button
@@ -492,42 +647,41 @@ const TicketAdd = (props) => {
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
   screen: {
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-  },
-  inputContainer: {
-    justifyContent: "center",
+    justifyContent:"center",
     alignItems: "center",
     flex: 1,
   },
   articleContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: "row",
+    width: "50%",
+  },
+  articleButtonContainer: {
     flexDirection: "row",
     width: "45%",
   },
   addArticle: {
     marginBottom: 7,
   },
+  deleteArticle: {
+    fontSize: 6,
+    marginBottom: 7,
+    margin: 1,
+  },
   input: {
     borderColor: "black",
     borderWidth: 1,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
-    width: "50%",
+    paddingHorizontal: 5,
+    width: "48%",
     borderRadius: 5,
     margin: 1,
   },
   inputBrand: {
-    marginTop: 50,
+    marginTop: 25,
     borderColor: "black",
     borderWidth: 1,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
+    paddingHorizontal: 5,
     width: "50%",
     borderRadius: 5,
     margin: 1,
@@ -542,7 +696,33 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 1,
     paddingHorizontal: 10,
-    backgroundColor: "white",
+    width: "50%",
+    borderRadius: 5,
+    margin: 1,
+    marginBottom: 7,
+  },
+  inputArticle: {
+    marginTop: 5,
+    borderColor: "black",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    width: "40%",
+    borderRadius: 5,
+    margin: 1,
+  },
+  inputArticleTop: {
+    borderColor: "black",
+    borderWidth: 1,
+    paddingHorizontal: 5,
+    width: "45%",
+    borderRadius: 5,
+    margin: 1,
+    marginBottom: 7,
+  },
+  inputTelNr: {
+    borderColor: "black",
+    borderWidth: 1,
+    paddingHorizontal: 10,
     width: "50%",
     borderRadius: 5,
     margin: 1,

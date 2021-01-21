@@ -61,7 +61,7 @@ const LoginScreen = (props) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: userEmail,
+        email: userEmail.toLowerCase(),
         password: userPassword,
       }),
     })

@@ -22,6 +22,9 @@ import * as Permissions from "expo-permissions";
 
 const TicketInfo = (props) => {
   //Initialisation des variables
+  const [showNoteModal, setShowNoteModal] = useState(false);
+  const [newNote, setNewNote] = useState("");
+  const [noteIsChanged, setNoteIsChanged] = useState(false);
   const data = props.data[0];
   const [manualTicket, setManualTicket] = useState(false);
   const [showArticle2, setShowArticle2] = useState(false);
@@ -35,7 +38,6 @@ const TicketInfo = (props) => {
     "-" +
     data.date.substring(0, 4) +
     "  " +
-    data.date.substring(11, 12) +
     hour +
     data.date.substring(13, 16);
   const note = data.note;
@@ -69,7 +71,14 @@ const TicketInfo = (props) => {
   const address =
     data.address[0] + ",\n" + data.address[1] + " " + data.address[2];
   const dataTelNr = data.telNr;
-  const telNr = dataTelNr.substring(0,4) + "/" + dataTelNr.substring(4,6)+ "." + dataTelNr.substring(6,8) + "." + dataTelNr.substring(8,10  );
+  const telNr =
+    dataTelNr.substring(0, 4) +
+    "/" +
+    dataTelNr.substring(4, 6) +
+    "." +
+    dataTelNr.substring(6, 8) +
+    "." +
+    dataTelNr.substring(8, 10);
 
   //Gestion de l'affichage des logos
   const logoHandler = () => {
@@ -194,6 +203,24 @@ const TicketInfo = (props) => {
     }
   };
 
+  const changeNote = () => {
+    props.onPatch(data._id, newNote);
+    setNoteIsChanged(true);
+    setShowNoteModal(false);
+  };
+
+  const showModal = () => {
+    setShowNoteModal(true);
+  };
+
+  const returnNoteModal = () => {
+    setShowNoteModal(false);
+  };
+
+  const noteInputHandler = (input) => {
+    setNewNote(input.replace(/[<>&{}[]]/g, ""));
+  };
+
   //Fonctions de retour et de supression de ticket
   const deleteButtonHandler = () => {
     Alert.alert(
@@ -209,8 +236,8 @@ const TicketInfo = (props) => {
         {
           text: "Confirmer",
           onPress: () => {
-            props.onDelete(data._id);
             setIsVerifyingPhoto(true);
+            props.onDelete(data._id);
           },
         },
       ],
@@ -219,8 +246,9 @@ const TicketInfo = (props) => {
   };
 
   const returnHandler = () => {
-    props.onCancel();
     setIsVerifyingPhoto(true);
+    setNoteIsChanged(false);
+    props.onCancel();
   };
 
   const cancelPhotoHandler = () => {
@@ -251,8 +279,46 @@ const TicketInfo = (props) => {
                 onPress={takeImage}
                 color={colors.accent}
               />
+              <Button
+                title="Modifier note"
+                onPress={showModal}
+                color={colors.focus}
+              />
             </View>
           )}
+          {showNoteModal ? (
+            <Modal animationType="slide">
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  Keyboard.dismiss();
+                }}
+              >
+                <View style={styles.inputArticle}>
+                  <TextInput
+                    placeholder="Nouvelle note"
+                    style={styles.inputTop}
+                    autoCorrect={false}
+                    maxLength={30}
+                    onChangeText={noteInputHandler}
+                    value={newNote}
+                  />
+                  <View style={styles.buttonContainer}>
+                    <Button
+                      title="Annuler"
+                      color={colors.primary}
+                      onPress={returnNoteModal}
+                    />
+                    <Button
+                      title="Changer"
+                      color={colors.accent}
+                      onPress={changeNote}
+                    />
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
+          ) : null}
+
           <View style={styles.container}>
             <View style={styles.textContainer}>
               <Text style={styles.text}>Enseigne</Text>
@@ -273,8 +339,8 @@ const TicketInfo = (props) => {
               <Text style={styles.textInfoTop}>{data.articles[1]}€</Text>
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>Quantité</Text>
-              <Text style={styles.textInfo}>{data.articles[2]}</Text>
+              <Text style={styles.textBoldness}>Quantité</Text>
+              <Text style={styles.textInfoBoldness}>{data.articles[2]}</Text>
             </View>
             {showArticle2 ? (
               <View>
@@ -283,8 +349,8 @@ const TicketInfo = (props) => {
                   <Text style={styles.textInfoTop}>{data.articles[4]}€</Text>
                 </View>
                 <View style={styles.textContainer}>
-                  <Text style={styles.text}>Quantité</Text>
-                  <Text style={styles.textInfo}>{data.articles[5]}</Text>
+                  <Text style={styles.textBoldness}>Quantité</Text>
+                  <Text style={styles.textInfoBoldness}>{data.articles[5]}</Text>
                 </View>
               </View>
             ) : null}
@@ -295,8 +361,8 @@ const TicketInfo = (props) => {
                   <Text style={styles.textInfoTop}>{data.articles[7]}€</Text>
                 </View>
                 <View style={styles.textContainer}>
-                  <Text style={styles.text}>Quantité</Text>
-                  <Text style={styles.textInfo}>{data.articles[8]}</Text>
+                  <Text style={styles.textBoldness}>Quantité</Text>
+                  <Text style={styles.textInfoBoldness}>{data.articles[8]}</Text>
                 </View>
               </View>
             ) : null}
@@ -321,8 +387,8 @@ const TicketInfo = (props) => {
               <Text style={styles.textInfo}>{date}</Text>
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.text}>N° de transaction</Text>
-              <Text style={styles.textInfo}>#1XDUZUIZ4842ZZD</Text>
+              <Text style={styles.textBoldness}>N° de transaction</Text>
+              <Text style={styles.textInfoBoldness}>#1XDUZUIZ4842ZZD</Text>
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.text}>Type de ticket</Text>
@@ -330,7 +396,11 @@ const TicketInfo = (props) => {
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.text}>Note</Text>
-              <Text style={styles.textInfo}>{note}</Text>
+              {!noteIsChanged ? (
+                <Text style={styles.textInfo}>{note}</Text>
+              ) : (
+                <Text style={styles.textInfo}>{newNote}</Text>
+              )}
             </View>
           </View>
           {isVerifyingPhoto ? (
@@ -378,18 +448,23 @@ const styles = StyleSheet.create({
   },
   container: {
     justifyContent: "flex-start",
-        borderWidth: 1,
-        borderRadius: 5,
-        margin: 5,
-        paddingVertical: 4,
-        marginHorizontal: 10
+    borderWidth: 1,
+    borderRadius: 5,
+    margin: 5,
+    paddingVertical: 4,
+    marginHorizontal: 10,
   },
   text: {
     fontWeight: "bold",
   },
   textInfo: {
     fontWeight: "bold",
-    color: "blue",
+    color: colors.focus,
+    marginBottom: 5,
+    textAlign: "right",
+  },
+  textInfoBoldness: {
+    color: colors.primary,
     marginBottom: 5,
     textAlign: "right",
   },
@@ -411,16 +486,37 @@ const styles = StyleSheet.create({
   },
   textInfoTop: {
     fontWeight: "bold",
-    color: "blue",
+    color: colors.focus,
     marginTop: 7,
     textAlign: "right",
   },
   containerPhoto: {
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
     margin: 15,
-    marginBottom: 25,
+    marginBottom: 15,
     alignItems: "center",
+  },
+  inputArticle: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+  inputTop: {
+    borderColor: "black",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    width: "50%",
+    borderRadius: 5,
+    margin: 1,
+    marginBottom: 7,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "45%",
+    marginVertical: 10,
   },
 });
 

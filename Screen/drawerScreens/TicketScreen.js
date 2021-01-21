@@ -19,9 +19,9 @@ import TicketAdd from "../../components/TicketAdd";
 import TicketInfo from "../../components/TicketInfo";
 import SearchPane from "../../components/SearchPane";
 import { userIdKey, userTokenKey } from "../../constants/keys.js";
+import CryptoJS from "react-native-crypto-js";
 
 export default function TicketScreen({ navigation }) {
-
   //Initialisation des variables
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -30,14 +30,33 @@ export default function TicketScreen({ navigation }) {
   const [ticketInfoModal, setTicketInfoModal] = useState(false);
   const [isDescending, setIsDescending] = useState(false);
   const [searchModal, setSearchModal] = useState(false);
+  const [hasTicket, setHasTicket] = useState(false);
 
   //Récupération des tickets du client concerné
   useEffect(() => {
     try {
       AsyncStorage.getItem(userIdKey).then((userIdKey) => {
-        fetch("https://etyk.be/api/tickets/" + userIdKey)
+        let cryptedKey = CryptoJS.AES.encrypt(
+          userIdKey,
+          "ikeugafoauiydfagogygyugouy§87585"
+        ).toString();
+        fetch("https://etyk.be/api/tickets/find", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: cryptedKey,
+          }),
+        })
           .then((response) => response.json())
+          .then((json) =>
+            CryptoJS.AES.decrypt(json, "ikeugafoauiydfagogygyugouy§87585")
+          )
+          .then((json) => JSON.parse(json.toString(CryptoJS.enc.Utf8)))
           .then((json) => setData(json.reverse()))
+          .then((json) => noTicketHandler(data))
           .catch((error) => console.error(error))
           .finally(() => setLoading(false));
       });
@@ -103,10 +122,28 @@ export default function TicketScreen({ navigation }) {
   const refreshHandler = () => {
     setIsDescending(false);
     setLoading(true);
+    setHasTicket(false);
   };
 
   //Créer un nouveau ticket MANUEL
-  const addTicketHandler = (brand, street, postalCode, region, telNr, articles, totalPrice, note, date) => {
+  const noTicketHandler = (input) => {
+    if (input === undefined || input.length == 0) {
+      setHasTicket(true);
+    } else {
+      setHasTicket(false);
+    }
+  };
+  const addTicketHandler = (
+    brand,
+    street,
+    postalCode,
+    region,
+    telNr,
+    articles,
+    totalPrice,
+    note,
+    date
+  ) => {
     try {
       AsyncStorage.getItem(userIdKey)
         .then((userIdKey) => {
@@ -160,6 +197,27 @@ export default function TicketScreen({ navigation }) {
       });
     setTicketInfoModal(false);
     setLoading(true);
+  };
+
+  //Modifier une note
+  const updateNoteHandler = (toDelete, note) => {
+    let toFetch = "https://etyk.be/api/tickets/" + toDelete;
+    fetch(toFetch, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        _id: toDelete,
+        note: note,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {})
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   //Gestion du bouton CARTE ETYK
@@ -304,6 +362,7 @@ export default function TicketScreen({ navigation }) {
           data={singeTicketData}
           onCancel={cancelTicketAddHandler}
           onDelete={removeTicketHandler}
+          onPatch={updateNoteHandler}
         />
       ) : null}
 
@@ -315,7 +374,11 @@ export default function TicketScreen({ navigation }) {
           onReturn={cancelTicketAddHandler}
         />
       ) : null}
-
+      {hasTicket ? (
+        <View style={styles.noTicketBox}>
+          <Text style={styles.noTicket}>Pas encore de ticket</Text>
+        </View>
+      ) : null}
       {isLoading ? (
         <ActivityIndicator />
       ) : (
@@ -372,5 +435,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     alignItems: "center",
   },
-  search: {},
+  noTicketBox: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 50,
+  },
+  noTicket: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: colors.accent,
+  },
 });

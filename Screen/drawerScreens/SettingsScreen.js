@@ -351,8 +351,6 @@ const styles = StyleSheet.create({
   screen: { flex: 1, alignItems: "center", justifyContent: "center" },
   firstSubText: {
     fontSize: 18,
-
-
     padding: 10,
     backgroundColor: "white",
     width: "70%",

@@ -33,16 +33,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "space-around",
-    marginVertical: 5,
+    margin: 5,
     flexDirection: "row",
   },
   logo: {
     width: 45,
     height: 18,
-    marginHorizontal: 20,
+    marginHorizontal: 25,
   },
   textItem: {
-    justifyContent: "space-evenly",
+    alignSelf: "center",
+    justifyContent: "space-around",
     flexDirection: "row",
   },
 });
