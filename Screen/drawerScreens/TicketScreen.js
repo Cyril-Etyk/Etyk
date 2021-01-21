@@ -179,7 +179,7 @@ export default function TicketScreen({ navigation }) {
 
   //Supprimer un ticket MANUEL
   const removeTicketHandler = (toDelete) => {
-    let toFetch = "https://etyk.be/api/tickets/" + toDelete;
+    let toFetch = "https://etyk.be/api/tickets/";
     fetch(toFetch, {
       method: "DELETE",
       headers: {
